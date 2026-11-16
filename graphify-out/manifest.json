@@ -228,8 +228,8 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/App.xaml.cs": {
-    "mtime": 1794825900.239255,
-    "seen": 1794826237.3812795,
+    "mtime": 1794826276.6163125,
+    "seen": 1794826669.5213962,
     "ast_hash": "e139ffd14817606ebc1997618cc666bb",
     "semantic_hash": ""
   },
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Converters/Converters.cs": {
-    "mtime": 1794825971.6094725,
-    "seen": 1794826237.38129,
+    "mtime": 1794826276.6675863,
+    "seen": 1794826669.5214021,
     "ast_hash": "0ce8d4f30ad1bd215559e35e6ab19a61",
     "semantic_hash": ""
   },
@@ -318,8 +318,8 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/SettingsViewModel.cs": {
-    "mtime": 1794826068.4071207,
-    "seen": 1794826237.381308,
+    "mtime": 1794826276.780588,
+    "seen": 1794826669.5214348,
     "ast_hash": "a966a7baffb86a60536d98b4f385615f",
     "semantic_hash": ""
   },
@@ -336,8 +336,8 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/DocumentsView.xaml": {
-    "mtime": 1794825952.409294,
-    "seen": 1794826237.3813198,
+    "mtime": 1794826276.899418,
+    "seen": 1794826669.5214412,
     "ast_hash": "b8b2bdce248b20a4cfda2440673e9bcd",
     "semantic_hash": ""
   },
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/PomodoroView.xaml": {
-    "mtime": 1794826025.831846,
-    "seen": 1794826237.3813252,
+    "mtime": 1794826276.9965818,
+    "seen": 1794826669.521451,
     "ast_hash": "0745795ebe93d20198c4d674148f49f3",
     "semantic_hash": ""
   },
@@ -528,15 +528,15 @@
     "semantic_hash": ""
   },
   "findings.md": {
-    "mtime": 1794818038.5344107,
-    "seen": 1794819413.4046226,
-    "ast_hash": "312490aa9a860b7b7754ccb1cf5a74c2",
+    "mtime": 1794826543.3768656,
+    "seen": 1794826669.5215297,
+    "ast_hash": "f03afbe6035fbe949290fe32ddb67510",
     "semantic_hash": ""
   },
   "progress.md": {
-    "mtime": 1794818043.3435166,
-    "seen": 1794819413.4046245,
-    "ast_hash": "da3478131b46a0b3b5b79ffb16647b47",
+    "mtime": 1794826624.8916738,
+    "seen": 1794826669.5215323,
+    "ast_hash": "f5da0c373b7a0bb54c411eee39fba35e",
     "semantic_hash": ""
   },
   "specs/001-smart-study-assistant/plan.md": {
@@ -552,15 +552,15 @@
     "semantic_hash": ""
   },
   "specs/001-smart-study-assistant/tasks.md": {
-    "mtime": 1794819285.3208945,
-    "seen": 1794819413.40463,
-    "ast_hash": "c19bd83fcdf4f099851d429a93d9a8ab",
+    "mtime": 1794826605.277113,
+    "seen": 1794826669.5215433,
+    "ast_hash": "2909ccc694fd790f283e86d581ee83fe",
     "semantic_hash": ""
   },
   "task_plan.md": {
-    "mtime": 1794819304.3659086,
-    "seen": 1794819413.404632,
-    "ast_hash": "838d6f19f2916403acc0c2528aede5c9",
+    "mtime": 1794826617.2640405,
+    "seen": 1794826669.5215485,
+    "ast_hash": "9c48690820d986499497e612b45235fb",
     "semantic_hash": ""
   },
   "tests/SmartStudyAssistant.Tests/DatabaseServiceTests.cs": {
@@ -573,6 +573,18 @@
     "mtime": 1794824119.8892176,
     "seen": 1794826237.3813436,
     "ast_hash": "3f79e80fe0a708bb2a15da34d5113ef2",
+    "semantic_hash": ""
+  },
+  "DESIGN.md": {
+    "mtime": 1794826571.3932583,
+    "seen": 1794826669.521521,
+    "ast_hash": "f349e0d03028593736200c55c3b26cde",
+    "semantic_hash": ""
+  },
+  "PRODUCT.md": {
+    "mtime": 1794826559.4357412,
+    "seen": 1794826669.5215263,
+    "ast_hash": "b92eb0e68ce1431c17ebebfa6a9d1818",
     "semantic_hash": ""
   }
 }
