@@ -1,0 +1,164 @@
+<UserControl x:Class="SmartStudyAssistant.Wpf.Views.FlashcardsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:SmartStudyAssistant.Wpf.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:FlashcardsViewModel}"
+             d:DesignHeight="700" d:DesignWidth="1000">
+
+    <Grid Background="{StaticResource BackgroundBrush}" Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="📇 Thẻ Ghi Nhớ Ôn Tập (Flashcards)" Style="{StaticResource Header1TextStyle}" />
+            <TextBlock Text="Ôn tập ngắt quãng (Spaced Repetition) giúp ghi nhớ kiến thức lâu hơn cho kỳ thi" 
+                       Style="{StaticResource SubtextStyle}" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="340" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Card Reviewer (Left) -->
+            <Grid Grid.Column="0" Margin="0,0,16,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Navigation & Counter -->
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Border Background="{StaticResource SurfaceAltBrush}" CornerRadius="6" Padding="8,4">
+                            <TextBlock Text="{Binding CurrentCard.SubjectName, FallbackValue='Môn: Chung'}" 
+                                       Style="{StaticResource CaptionStyle}" FontWeight="SemiBold" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Text="{Binding CurrentCardIndex, StringFormat='{}Thẻ {0}'}" 
+                                   Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <TextBlock Text="{Binding Flashcards.Count, StringFormat='{} / {0}'}" 
+                                   Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Interactive Card Body -->
+                <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}"
+                        Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="2"
+                        Cursor="Hand" CornerRadius="16" Padding="32">
+                    <Border.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding FlipCardCommand}" />
+                    </Border.InputBindings>
+                    <Grid>
+                        <!-- Front Face -->
+                        <Grid Visibility="{Binding IsFlipped, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="MẶT TRƯỚC (CÂU HỎI / KHÁI NIỆM)" 
+                                           Style="{StaticResource CaptionStyle}" HorizontalAlignment="Center" Margin="0,0,0,16" />
+                                <TextBlock Text="{Binding CurrentCard.Front, FallbackValue='Chưa có thẻ nào. Hãy thêm thẻ bên phải!'}" 
+                                           Style="{StaticResource Header1TextStyle}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="520" />
+                                <TextBlock Text="💡 Nhấn vào thẻ để lật xem đáp án" 
+                                           Style="{StaticResource SubtextStyle}" HorizontalAlignment="Center" Margin="0,24,0,0" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Back Face -->
+                        <Grid Visibility="{Binding IsFlipped, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="MẶT SAU (ĐÁP ÁN / GIẢI NGHĨA)" 
+                                           Style="{StaticResource CaptionStyle}" Foreground="{StaticResource AccentSuccessBrush}" 
+                                           HorizontalAlignment="Center" Margin="0,0,0,16" />
+                                <TextBlock Text="{Binding CurrentCard.Back}" 
+                                           Style="{StaticResource Header2TextStyle}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="520" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- Review & Rating Action Bar -->
+                <Grid Grid.Row="2" Margin="0,16,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Content="◀ Thẻ trước" 
+                            Command="{Binding PreviousCardCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}" />
+
+                    <!-- SRS Rating Buttons (Show when flipped) -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center"
+                                Visibility="{Binding IsFlipped, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button Content="😰 Khó (1 ngày)" Style="{StaticResource SecondaryButtonStyle}" 
+                                Command="{Binding RateCardCommand}" CommandParameter="1" 
+                                Foreground="{StaticResource AccentDangerBrush}" Margin="0,0,8,0" />
+                        <Button Content="🙂 Tốt (3 ngày)" Style="{StaticResource SecondaryButtonStyle}" 
+                                Command="{Binding RateCardCommand}" CommandParameter="3" 
+                                Foreground="{StaticResource AccentWarningBrush}" Margin="0,0,8,0" />
+                        <Button Content="🤩 Dễ (7 ngày)" Style="{StaticResource PrimaryButtonStyle}" 
+                                Command="{Binding RateCardCommand}" CommandParameter="5" 
+                                Background="{StaticResource AccentSuccessBrush}" />
+                    </StackPanel>
+
+                    <Button Grid.Column="2" Content="Thẻ tiếp ▶" 
+                            Command="{Binding NextCardCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}" />
+                </Grid>
+            </Grid>
+
+            <!-- Card Management & AI Generator (Right Sidebar) -->
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- AI Generator Box -->
+                    <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="⚡ AI Tự Tạo Flashcard" Style="{StaticResource Header3TextStyle}" Margin="0,0,0,8" />
+                            <TextBlock Text="Nhập chủ đề hoặc tên bài học, AI sẽ tự động sinh các thẻ quan trọng:" 
+                                       Style="{StaticResource CaptionStyle}" Margin="0,0,0,8" />
+                            <TextBox Text="{Binding AiGenerateTopic, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,10" />
+                            <Button Content="✨ Tạo Flashcards Bằng AI" 
+                                    Command="{Binding GenerateCardsWithAiCommand}"
+                                    Style="{StaticResource PrimaryButtonStyle}" 
+                                    IsEnabled="{Binding IsGeneratingCards, Converter={StaticResource InverseBooleanConverter}}"
+                                    HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Manual Card Form -->
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <StackPanel>
+                            <TextBlock Text="➕ Thêm Thẻ Mới Thủ Công" Style="{StaticResource Header3TextStyle}" Margin="0,0,0,12" />
+
+                            <TextBlock Text="Môn học:" Style="{StaticResource CaptionStyle}" Margin="0,0,0,4" />
+                            <TextBox Text="{Binding NewSubject, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,8" />
+
+                            <TextBlock Text="Mặt trước (Câu hỏi):" Style="{StaticResource CaptionStyle}" Margin="0,0,0,4" />
+                            <TextBox Text="{Binding NewFront, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBoxStyle}" AcceptsReturn="True" MinHeight="60" Margin="0,0,0,8" />
+
+                            <TextBlock Text="Mặt sau (Đáp án):" Style="{StaticResource CaptionStyle}" Margin="0,0,0,4" />
+                            <TextBox Text="{Binding NewBack, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBoxStyle}" AcceptsReturn="True" MinHeight="60" Margin="0,0,0,12" />
+
+                            <Button Content="Lưu Thẻ" Command="{Binding AddCardCommand}" 
+                                    Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

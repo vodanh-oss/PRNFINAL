@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SmartStudyAssistant.Core/SmartStudyAssistant.Core.csproj" />
+    <Project Path="src/SmartStudyAssistant.Wpf/SmartStudyAssistant.Wpf.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SmartStudyAssistant.Tests/SmartStudyAssistant.Tests.csproj" />
+  </Folder>
+</Solution>

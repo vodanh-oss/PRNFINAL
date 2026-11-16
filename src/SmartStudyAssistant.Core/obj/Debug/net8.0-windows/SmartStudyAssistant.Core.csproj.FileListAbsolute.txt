@@ -1,0 +1,13 @@
+C:\PRNFINAL\src\SmartStudyAssistant.Core\bin\Debug\net8.0-windows\SmartStudyAssistant.Core.deps.json
+C:\PRNFINAL\src\SmartStudyAssistant.Core\bin\Debug\net8.0-windows\SmartStudyAssistant.Core.dll
+C:\PRNFINAL\src\SmartStudyAssistant.Core\bin\Debug\net8.0-windows\SmartStudyAssistant.Core.pdb
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\SmartStudyAssistant.Core.csproj.AssemblyReference.cache
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\SmartStudyAssistant.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\SmartStudyAssistant.Core.AssemblyInfoInputs.cache
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\SmartStudyAssistant.Core.AssemblyInfo.cs
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\SmartStudyAssistant.Core.csproj.CoreCompileInputs.cache
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\SmartStudyAssistant.Core.dll
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\refint\SmartStudyAssistant.Core.dll
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\SmartStudyAssistant.Core.pdb
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\ref\SmartStudyAssistant.Core.dll
+C:\PRNFINAL\src\SmartStudyAssistant.Core\obj\Debug\net8.0-windows\SmartStu.FB03984F.Up2Date

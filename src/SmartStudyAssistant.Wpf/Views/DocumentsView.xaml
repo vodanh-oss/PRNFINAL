@@ -1,0 +1,171 @@
+<UserControl x:Class="SmartStudyAssistant.Wpf.Views.DocumentsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:SmartStudyAssistant.Wpf.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:DocumentsViewModel}"
+             d:DesignHeight="700" d:DesignWidth="1000">
+
+    <Grid Background="{StaticResource BackgroundBrush}" Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="📚 Quản Lý Tài Liệu &amp; Slide Bài Giảng" Style="{StaticResource Header1TextStyle}" />
+            <TextBlock Text="Kéo thả đề cương, bài giảng PDF, DOCX để trích xuất nội dung và lập chỉ mục RAG tự động" 
+                       Style="{StaticResource SubtextStyle}" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <!-- Drag & Drop Zone -->
+        <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" 
+                BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="1.5"
+                AllowDrop="True" Drop="DropZone_Drop" DragOver="DropZone_DragOver"
+                Background="{StaticResource SurfaceBrush}" Margin="0,0,0,20" Padding="28">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="📥" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,8" />
+                <TextBlock Text="Kéo-thả Slide PDF, Đề cương DOCX, TXT vào đây" 
+                           Style="{StaticResource Header2TextStyle}" HorizontalAlignment="Center" />
+                <TextBlock Text="Hỗ trợ tự động phân đoạn theo từng slide / trang và sinh vector embedding" 
+                           Style="{StaticResource SubtextStyle}" HorizontalAlignment="Center" Margin="0,4,0,14" />
+                
+                <Button Content="📂 Chọn tệp từ máy..." 
+                        Command="{Binding BrowseAndAddFilesCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}" 
+                        HorizontalAlignment="Center" />
+
+                <!-- Progress indicator -->
+                <StackPanel Margin="0,16,0,0" Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ProgressBar Value="{Binding ProcessingProgress}" Maximum="100" Height="8" 
+                                 Foreground="{StaticResource PrimaryBrush}" Background="{StaticResource SurfaceAltBrush}" />
+                    <TextBlock Text="{Binding ProcessingStatus}" Style="{StaticResource CaptionStyle}" 
+                               HorizontalAlignment="Center" Margin="0,6,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area (Documents list & Chunk inspection) -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Documents List (Left) -->
+            <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,12,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="DANH SÁCH TÀI LIỆU ĐÃ NẠP" Style="{StaticResource Header3TextStyle}" Margin="0,0,0,12" />
+
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Documents}" 
+                             SelectedItem="{Binding SelectedDocument, Mode=TwoWay}"
+                             Background="Transparent" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource SurfaceAltBrush}" 
+                                        BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1"
+                                        CornerRadius="8" Padding="12" Margin="0,0,0,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Document Type Icon -->
+                                        <Border Grid.Column="0" Width="36" Height="36" CornerRadius="8"
+                                                Background="{StaticResource PrimaryBrush}" Margin="0,0,12,0">
+                                            <TextBlock Text="{Binding FileType}" Foreground="#FFFFFF" 
+                                                       FontWeight="Bold" FontSize="11"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+
+                                        <!-- Info -->
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding FileName}" FontWeight="SemiBold" 
+                                                       Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" />
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                                <TextBlock Text="{Binding TotalPages, StringFormat='{}Trang/Slide: {0}  |  '}" 
+                                                           Style="{StaticResource CaptionStyle}" />
+                                                <TextBlock Text="{Binding TotalChunks, StringFormat='{}Số đoạn: {0}  |  '}" 
+                                                           Style="{StaticResource CaptionStyle}" />
+                                                <TextBlock Text="{Binding FormattedFileSize}" Style="{StaticResource CaptionStyle}" />
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <!-- Actions -->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <!-- RAG Toggle CheckBox -->
+                                            <CheckBox IsChecked="{Binding IsSelectedForRag}" 
+                                                      Command="{Binding DataContext.ToggleRagSelectionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                      CommandParameter="{Binding}"
+                                                      ToolTip="Bật/Tắt tra cứu RAG tài liệu này"
+                                                      Cursor="Hand" Margin="0,0,8,0" />
+                                            <!-- Delete Button -->
+                                            <Button Content="🗑️" 
+                                                    Command="{Binding DataContext.DeleteDocumentCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="Transparent" BorderThickness="0" 
+                                                    Foreground="{StaticResource AccentDangerBrush}"
+                                                    Cursor="Hand" Padding="4" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- Chunks Inspector (Right) -->
+            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="12,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock Text="CÁC ĐOẠN TRÍCH (CHUNKS) TRONG SLIDE" Style="{StaticResource Header3TextStyle}" />
+                        <TextBlock Text="{Binding ChunksForSelectedDoc.Count, StringFormat='{}Tổng số đoạn đã lập chỉ mục: {0}'}" 
+                                   Style="{StaticResource CaptionStyle}" Margin="0,2,0,0" />
+                    </StackPanel>
+
+                    <ListBox Grid.Row="1" ItemsSource="{Binding ChunksForSelectedDoc}"
+                             Background="Transparent" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource SurfaceAltBrush}" 
+                                        BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1"
+                                        CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                            <Border Background="{StaticResource CitationBadgeBrush}" CornerRadius="4" Padding="6,2">
+                                                <TextBlock Text="{Binding PageOrSlideNumber, StringFormat='{}Slide / Trang {0}'}" 
+                                                           Foreground="{StaticResource CitationBadgeTextBrush}" 
+                                                           FontWeight="SemiBold" FontSize="11" />
+                                            </Border>
+                                            <TextBlock Text="{Binding ChunkIndex, StringFormat='{} (Đoạn #{0})'}" 
+                                                       Style="{StaticResource CaptionStyle}" VerticalAlignment="Center" Margin="6,0,0,0" />
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding TextContent}" TextWrapping="Wrap" 
+                                                   Style="{StaticResource BodyTextStyle}" FontSize="12.5" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

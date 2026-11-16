@@ -1,0 +1,20 @@
+﻿<Application x:Class="SmartStudyAssistant.Wpf.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:SmartStudyAssistant.Wpf.Converters">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/Colors.xaml" />
+                <ResourceDictionary Source="Styles/Typography.xaml" />
+                <ResourceDictionary Source="Styles/Controls.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <conv:TabToVisibilityConverter x:Key="TabToVisibilityConverter" />
+            <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <conv:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <conv:RoleToAlignmentConverter x:Key="RoleToAlignmentConverter" />
+            <conv:RoleToBackgroundConverter x:Key="RoleToBackgroundConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

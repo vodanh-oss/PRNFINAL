@@ -1,0 +1,207 @@
+<UserControl x:Class="SmartStudyAssistant.Wpf.Views.ProgressView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:SmartStudyAssistant.Wpf.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:ProgressViewModel}"
+             d:DesignHeight="700" d:DesignWidth="1050">
+
+    <Grid Background="{StaticResource BackgroundBrush}" Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="📊 Tiến Độ Môn Học &amp; Sổ Tay Ghi Chú" Style="{StaticResource Header1TextStyle}" />
+            <TextBlock Text="Theo dõi mục tiêu điểm số, checklist đề cương và lưu trữ ghi chú quan trọng từ AI" 
+                       Style="{StaticResource SubtextStyle}" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <!-- 3 Columns Layout -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280" />
+                <ColumnDefinition Width="380" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Column 1: Subjects List -->
+            <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,10,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="CÁC MÔN HỌC" Style="{StaticResource Header3TextStyle}" Margin="0,0,0,10" />
+
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Subjects}" 
+                             SelectedItem="{Binding SelectedSubject, Mode=TwoWay}"
+                             Background="Transparent" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource SurfaceAltBrush}" 
+                                        BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1"
+                                        CornerRadius="8" Padding="12" Margin="0,0,0,8">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" 
+                                                       Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" />
+                                            <Border HorizontalAlignment="Right" Background="{StaticResource PrimaryBrush}" 
+                                                    CornerRadius="4" Padding="5,2">
+                                                <TextBlock Text="{Binding TargetGrade, StringFormat='Mục tiêu: {0}'}" 
+                                                           Foreground="#FFFFFF" FontSize="10" FontWeight="Bold" />
+                                            </Border>
+                                        </Grid>
+
+                                        <TextBlock Grid.Row="1" Text="{Binding Code}" Style="{StaticResource CaptionStyle}" Margin="0,2,0,6" />
+
+                                        <!-- Progress Bar -->
+                                        <Grid Grid.Row="2">
+                                            <ProgressBar Value="{Binding ProgressPercentage}" Maximum="100" Height="5"
+                                                         Foreground="{StaticResource AccentSuccessBrush}" Background="{StaticResource SurfaceBorderBrush}" />
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Add Subject Form -->
+                    <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                        <TextBox Text="{Binding NewSubjectName, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource ModernTextBoxStyle}" 
+                                 Tag="Tên môn học mới" Margin="0,0,0,6" />
+                        <Button Content="+ Thêm Môn Học" Command="{Binding AddSubjectCommand}" 
+                                Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Column 2: Checklist for Selected Subject -->
+            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="0,0,10,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock Text="{Binding SelectedSubject.Name, FallbackValue='Chọn một môn học'}" 
+                                   Style="{StaticResource Header3TextStyle}" />
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <TextBlock Text="{Binding SelectedSubject.ProgressPercentage, StringFormat='{}Hoàn thành: {0:F0}%'}" 
+                                       Style="{StaticResource CaptionStyle}" Foreground="{StaticResource AccentSuccessBrush}" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Checklist Items -->
+                    <ListBox Grid.Row="1" ItemsSource="{Binding SelectedSubject.Checklist}"
+                             Background="Transparent" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource SurfaceAltBrush}" CornerRadius="6" Padding="10,8" Margin="0,0,0,6">
+                                    <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}"
+                                              Command="{Binding DataContext.ToggleChecklistItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              CommandParameter="{Binding}"
+                                              Cursor="Hand">
+                                        <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextPrimaryBrush}" 
+                                                   TextWrapping="Wrap" Margin="8,0,0,0" FontSize="13" />
+                                    </CheckBox>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Add Checklist Item -->
+                    <Grid Grid.Row="2" Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding NewChecklistTitle, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,6,0" />
+                        <Button Grid.Column="1" Content="Thêm" Command="{Binding AddChecklistItemCommand}" 
+                                Style="{StaticResource PrimaryButtonStyle}" />
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- Column 3: Study Notes -->
+            <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1.2*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="SỔ TAY GHI CHÚ BÀI HỌC" Style="{StaticResource Header3TextStyle}" Margin="0,0,0,10" />
+
+                    <!-- Notes List -->
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Notes}"
+                             SelectedItem="{Binding SelectedNote, Mode=TwoWay}"
+                             Background="Transparent" BorderThickness="0" Margin="0,0,0,10">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource SurfaceAltBrush}" 
+                                        BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1"
+                                        CornerRadius="6" Padding="10" Margin="0,0,0,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" 
+                                                       Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Text="{Binding Content}" TextTrimming="CharacterEllipsis" 
+                                                       MaxHeight="36" Style="{StaticResource CaptionStyle}" Margin="0,3,0,0" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Content="🗑️" 
+                                                Command="{Binding DataContext.DeleteNoteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" 
+                                                Foreground="{StaticResource AccentDangerBrush}"
+                                                Cursor="Hand" Padding="4" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Add Note Box -->
+                    <Border Grid.Row="2" Background="{StaticResource SurfaceAltBrush}" CornerRadius="8" Padding="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBox Grid.Row="0" Text="{Binding NewNoteTitle, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBoxStyle}" 
+                                     Tag="Tiêu đề ghi chú..." Margin="0,0,0,6" />
+                            <TextBox Grid.Row="1" Text="{Binding NewNoteContent, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBoxStyle}" AcceptsReturn="True" 
+                                     Tag="Nội dung tóm tắt / ghi nhớ..." Margin="0,0,0,8" />
+                            <Button Grid.Row="2" Content="+ Lưu Ghi Chú" Command="{Binding AddNoteCommand}" 
+                                    Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Right" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
