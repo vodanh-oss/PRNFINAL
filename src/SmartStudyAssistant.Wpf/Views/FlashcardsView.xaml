@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
             <TextBlock Text="📇 Thẻ Ghi Nhớ Ôn Tập (Flashcards)" Style="{StaticResource Header1TextStyle}" />
             <TextBlock Text="Ôn tập ngắt quãng (Spaced Repetition) giúp ghi nhớ kiến thức lâu hơn cho kỳ thi" 
                        Style="{StaticResource SubtextStyle}" Margin="0,4,0,0" />
@@ -40,18 +40,20 @@
                 <!-- Deck / Group Selection Chips Bar -->
                 <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}" 
                         BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1" 
-                        CornerRadius="10" Padding="12,10" Margin="0,0,0,12">
+                        CornerRadius="10" Padding="12,8" Margin="0,0,0,12">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
                             <TextBlock Text="📂 Nhóm môn học:" FontWeight="Bold" FontSize="12" 
                                        Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
                         </StackPanel>
 
+                        <!-- Chips list -->
                         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                             <ItemsControl ItemsSource="{Binding GroupItems}">
                                 <ItemsControl.ItemsPanel>
@@ -63,7 +65,7 @@
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.SelectGroupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding GroupName}"
-                                                Margin="0,0,8,0" Padding="12,5" Cursor="Hand" BorderThickness="1">
+                                                Margin="0,0,6,0" Padding="12,5" Cursor="Hand" BorderThickness="1">
                                             <Button.Style>
                                                 <Style TargetType="Button">
                                                     <Setter Property="Background" Value="{StaticResource SurfaceAltBrush}" />
@@ -102,6 +104,33 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </ScrollViewer>
+
+                        <!-- Add Group Action Area -->
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                            <!-- Button when NOT adding -->
+                            <Button Content="➕ Thêm Nhóm Môn" 
+                                    Command="{Binding OpenAddGroupCommand}"
+                                    Visibility="{Binding IsAddingGroup, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}"
+                                    Style="{StaticResource SecondaryButtonStyle}" 
+                                    Padding="10,5" FontSize="11" />
+
+                            <!-- Inline Form when adding -->
+                            <StackPanel Orientation="Horizontal" 
+                                        Visibility="{Binding IsAddingGroup, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBox Text="{Binding NewGroupNameInput, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBoxStyle}" 
+                                         Width="120" FontSize="12" Padding="6,3" Margin="0,0,4,0">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Return" Command="{Binding ConfirmAddGroupCommand}" />
+                                        <KeyBinding Key="Esc" Command="{Binding CancelAddGroupCommand}" />
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                <Button Content="Tạo" Command="{Binding ConfirmAddGroupCommand}" 
+                                        Style="{StaticResource PrimaryButtonStyle}" Padding="8,4" FontSize="11" Margin="0,0,4,0" />
+                                <Button Content="✕" Command="{Binding CancelAddGroupCommand}" 
+                                        Style="{StaticResource SecondaryButtonStyle}" Padding="6,4" FontSize="11" />
+                            </StackPanel>
+                        </StackPanel>
                     </Grid>
                 </Border>
 
@@ -221,6 +250,74 @@
                                        Style="{StaticResource CaptionStyle}" Margin="0,0,0,8" />
                             <TextBox Text="{Binding AiGenerateTopic, UpdateSourceTrigger=PropertyChanged}" 
                                      Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,10" />
+
+                            <!-- Number of Cards Selector -->
+                            <TextBlock Text="Số lượng thẻ cần tạo:" Style="{StaticResource CaptionStyle}" Margin="0,0,0,6" />
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Content="3 thẻ" Command="{Binding SetAiCardCountCommand}" CommandParameter="3"
+                                        Margin="0,0,3,0" Padding="0,5" FontSize="11" Cursor="Hand">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AiCardCount}" Value="3">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
+                                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                                    <Setter Property="FontWeight" Value="Bold" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                                <Button Grid.Column="1" Content="5 thẻ" Command="{Binding SetAiCardCountCommand}" CommandParameter="5"
+                                        Margin="2,0,2,0" Padding="0,5" FontSize="11" Cursor="Hand">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AiCardCount}" Value="5">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
+                                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                                    <Setter Property="FontWeight" Value="Bold" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                                <Button Grid.Column="2" Content="8 thẻ" Command="{Binding SetAiCardCountCommand}" CommandParameter="8"
+                                        Margin="2,0,2,0" Padding="0,5" FontSize="11" Cursor="Hand">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AiCardCount}" Value="8">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
+                                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                                    <Setter Property="FontWeight" Value="Bold" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                                <Button Grid.Column="3" Content="10 thẻ" Command="{Binding SetAiCardCountCommand}" CommandParameter="10"
+                                        Margin="3,0,0,0" Padding="0,5" FontSize="11" Cursor="Hand">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AiCardCount}" Value="10">
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
+                                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                                    <Setter Property="FontWeight" Value="Bold" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </Grid>
+
                             <Button Content="✨ Tạo Flashcards Bằng AI" 
                                     Command="{Binding GenerateCardsWithAiCommand}"
                                     Style="{StaticResource PrimaryButtonStyle}" 
@@ -229,14 +326,16 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Manual Card Form -->
+                    <!-- Manual Card Form (Môn học is auto-assigned from active group) -->
                     <Border Style="{StaticResource CardBorderStyle}">
                         <StackPanel>
-                            <TextBlock Text="➕ Thêm Thẻ Mới Thủ Công" Style="{StaticResource Header3TextStyle}" Margin="0,0,0,12" />
+                            <TextBlock Text="➕ Thêm Thẻ Mới Thủ Công" Style="{StaticResource Header3TextStyle}" Margin="0,0,0,8" />
 
-                            <TextBlock Text="Môn học:" Style="{StaticResource CaptionStyle}" Margin="0,0,0,4" />
-                            <TextBox Text="{Binding NewSubject, UpdateSourceTrigger=PropertyChanged}" 
-                                     Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,8" />
+                            <!-- Active Group Target Info -->
+                            <Border Background="{StaticResource SurfaceAltBrush}" CornerRadius="6" Padding="10,6" Margin="0,0,0,10">
+                                <TextBlock Text="{Binding ActiveGroupTargetText}" 
+                                           FontWeight="SemiBold" FontSize="11.5" Foreground="{StaticResource PrimaryBrush}" />
+                            </Border>
 
                             <TextBlock Text="Mặt trước (Câu hỏi):" Style="{StaticResource CaptionStyle}" Margin="0,0,0,4" />
                             <TextBox Text="{Binding NewFront, UpdateSourceTrigger=PropertyChanged}" 

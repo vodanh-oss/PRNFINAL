@@ -127,4 +127,39 @@ public class FlashcardGroupingAndAiCoordinatorTests
         vm.CurrentCard?.SubjectName.Should().Be("PRN211");
         vm.ProgressPercentage.Should().Be(50.0); // 1 / 2 = 50%
     }
+
+    [Fact]
+    public async Task FlashcardsViewModel_AddNewGroup_AndAutoAssignCard()
+    {
+        var fakeStorage = new FakeSecureStorage();
+        var coordinator = new AiServiceCoordinator(fakeStorage);
+        var fakeDb = new FakeDatabaseService();
+
+        var vm = new FlashcardsViewModel(fakeDb, coordinator);
+        await vm.LoadFlashcardsAsync();
+
+        // 1. Add new group "MAS291"
+        vm.OpenAddGroup();
+        vm.IsAddingGroup.Should().BeTrue();
+        vm.NewGroupNameInput = "MAS291";
+        vm.ConfirmAddGroup();
+
+        vm.IsAddingGroup.Should().BeFalse();
+        vm.GroupItems.Should().Contain(g => g.GroupName == "MAS291");
+        vm.SelectedGroupName.Should().Be("MAS291");
+        vm.ActiveGroupTargetText.Should().Contain("MAS291");
+
+        // 2. Add card manually without entering subject - auto assigned to MAS291
+        vm.NewFront = "Tích phân Riemann là gì?";
+        vm.NewBack = "Định nghĩa diện tích hình thang cong giới hạn bởi đường cong f(x).";
+        await vm.AddCardCommand.ExecuteAsync(null);
+
+        vm.Flashcards.Should().HaveCount(1);
+        vm.CurrentCard?.SubjectName.Should().Be("MAS291");
+        vm.CurrentCard?.Front.Should().Be("Tích phân Riemann là gì?");
+
+        // 3. Set AI card count
+        vm.SetAiCardCount(10);
+        vm.AiCardCount.Should().Be(10);
+    }
 }

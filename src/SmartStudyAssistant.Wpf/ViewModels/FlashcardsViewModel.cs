@@ -26,6 +26,7 @@ public partial class FlashcardsViewModel : ObservableObject
     private readonly IDatabaseService _databaseService;
     private readonly AiServiceCoordinator _aiCoordinator;
     private List<Flashcard> _allCards = new();
+    private readonly HashSet<string> _customGroups = new(StringComparer.OrdinalIgnoreCase);
 
     [ObservableProperty]
     private ObservableCollection<FlashcardGroupItem> _groupItems = new();
@@ -67,13 +68,21 @@ public partial class FlashcardsViewModel : ObservableObject
     private string _newBack = string.Empty;
 
     [ObservableProperty]
-    private string _newSubject = "Chung";
-
-    [ObservableProperty]
     private bool _isGeneratingCards;
 
     [ObservableProperty]
     private string _aiGenerateTopic = string.Empty;
+
+    [ObservableProperty]
+    private int _aiCardCount = 5;
+
+    [ObservableProperty]
+    private bool _isAddingGroup;
+
+    [ObservableProperty]
+    private string _newGroupNameInput = string.Empty;
+
+    public string ActiveGroupTargetText => $"📁 Thẻ sẽ lưu vào nhóm: {(SelectedGroupName != "Tất cả" ? SelectedGroupName : "Chung")}";
 
     public FlashcardsViewModel(IDatabaseService databaseService, AiServiceCoordinator aiCoordinator)
     {
@@ -90,6 +99,7 @@ public partial class FlashcardsViewModel : ObservableObject
     {
         var distinctSubjects = _allCards
             .Select(c => string.IsNullOrWhiteSpace(c.SubjectName) ? "Chung" : c.SubjectName.Trim())
+            .Union(_customGroups)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(s => s)
             .ToList();
@@ -118,7 +128,7 @@ public partial class FlashcardsViewModel : ObservableObject
 
         GroupItems = newGroupList;
 
-        // Select preferred group or fallback to currently selected or first
+        // Select preferred group or fallback
         if (!string.IsNullOrWhiteSpace(preferredGroup) &&
             GroupItems.Any(g => g.GroupName.Equals(preferredGroup, StringComparison.OrdinalIgnoreCase)))
         {
@@ -163,11 +173,7 @@ public partial class FlashcardsViewModel : ObservableObject
             CurrentCard = null;
         }
 
-        if (SelectedGroupName != "Tất cả")
-        {
-            NewSubject = SelectedGroupName;
-        }
-
+        OnPropertyChanged(nameof(ActiveGroupTargetText));
         UpdateProgress();
     }
 
@@ -183,6 +189,50 @@ public partial class FlashcardsViewModel : ObservableObject
         }
 
         ApplyGroupFilter();
+    }
+
+    [RelayCommand]
+    public void OpenAddGroup()
+    {
+        IsAddingGroup = true;
+        NewGroupNameInput = string.Empty;
+    }
+
+    [RelayCommand]
+    public void CancelAddGroup()
+    {
+        IsAddingGroup = false;
+        NewGroupNameInput = string.Empty;
+    }
+
+    [RelayCommand]
+    public void ConfirmAddGroup()
+    {
+        if (string.IsNullOrWhiteSpace(NewGroupNameInput))
+        {
+            IsAddingGroup = false;
+            return;
+        }
+
+        var groupName = NewGroupNameInput.Trim();
+        _customGroups.Add(groupName);
+        IsAddingGroup = false;
+        NewGroupNameInput = string.Empty;
+
+        RefreshGroups(groupName);
+    }
+
+    [RelayCommand]
+    public void SetAiCardCount(object? param)
+    {
+        if (param is int count)
+        {
+            AiCardCount = count;
+        }
+        else if (param is string s && int.TryParse(s, out var parsed))
+        {
+            AiCardCount = parsed;
+        }
     }
 
     public void UpdateProgress()
@@ -274,12 +324,14 @@ public partial class FlashcardsViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(NewFront) || string.IsNullOrWhiteSpace(NewBack))
             return;
 
-        var subject = string.IsNullOrWhiteSpace(NewSubject) ? "Chung" : NewSubject.Trim();
+        // Auto-assign to active group (or "Chung" if currently viewing "Tất cả")
+        var targetSubject = SelectedGroupName != "Tất cả" ? SelectedGroupName : "Chung";
+
         var card = new Flashcard
         {
             Front = NewFront.Trim(),
             Back = NewBack.Trim(),
-            SubjectName = subject,
+            SubjectName = targetSubject,
             NextReviewDate = DateTime.UtcNow
         };
 
@@ -289,7 +341,7 @@ public partial class FlashcardsViewModel : ObservableObject
         NewFront = string.Empty;
         NewBack = string.Empty;
 
-        RefreshGroups(subject);
+        RefreshGroups(targetSubject);
     }
 
     [RelayCommand]
@@ -309,8 +361,13 @@ public partial class FlashcardsViewModel : ObservableObject
         IsGeneratingCards = true;
         try
         {
+            var count = AiCardCount > 0 ? AiCardCount : 5;
+            var targetSubject = SelectedGroupName != "Tất cả" 
+                ? SelectedGroupName 
+                : (string.IsNullOrWhiteSpace(AiGenerateTopic) ? "Chung" : AiGenerateTopic.Trim());
+
             var prompt = $"""
-                Hãy tạo 4 thẻ ghi nhớ (Flashcard) về chủ đề: "{AiGenerateTopic}".
+                Hãy tạo đúng {count} thẻ ghi nhớ (Flashcard) học tập về chủ đề: "{AiGenerateTopic}".
                 Định dạng trả về duy nhất là danh sách các dòng theo mẫu:
                 Mặt trước | Mặt sau
                 Mặt trước | Mặt sau
@@ -320,7 +377,6 @@ public partial class FlashcardsViewModel : ObservableObject
             var history = new[] { new ChatMessage { Role = "user", Content = prompt } };
             var response = await _aiCoordinator.SendMessageAsync(history);
 
-            var topic = AiGenerateTopic.Trim();
             var lines = response.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines)
             {
@@ -336,7 +392,7 @@ public partial class FlashcardsViewModel : ObservableObject
                         {
                             Front = front,
                             Back = back,
-                            SubjectName = topic,
+                            SubjectName = targetSubject,
                             NextReviewDate = DateTime.UtcNow
                         };
                         await _databaseService.SaveFlashcardAsync(card);
@@ -346,7 +402,7 @@ public partial class FlashcardsViewModel : ObservableObject
             }
 
             AiGenerateTopic = string.Empty;
-            RefreshGroups(topic);
+            RefreshGroups(targetSubject);
         }
         catch
         {

@@ -288,9 +288,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/FlashcardsViewModel.cs": {
-    "mtime": 1794829172.4555993,
-    "seen": 1794831345.5908208,
-    "ast_hash": "d2839f28d719b18bdcc567b7b05df1d5",
+    "mtime": 1794832806.6084325,
+    "seen": 1794833083.9737072,
+    "ast_hash": "4384b76707b2d937d089b829d9e3f137",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/MainViewModel.cs": {
@@ -306,8 +306,8 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/ChatView.xaml": {
-    "mtime": 1794831850.6246793,
-    "seen": 1794832299.829863,
+    "mtime": 1794832365.8532512,
+    "seen": 1794833083.9751024,
     "ast_hash": "d7e00c80ac016fa9c52c01a4a9c55c2d",
     "semantic_hash": ""
   },
@@ -330,9 +330,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/FlashcardsView.xaml": {
-    "mtime": 1794831909.4382908,
-    "seen": 1794832299.833341,
-    "ast_hash": "cdc864914eba439b484620bc8f923a60",
+    "mtime": 1794832961.0976489,
+    "seen": 1794833083.9766064,
+    "ast_hash": "c3b763c8f3cb7d66d2a60c4254dc9120",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/FlashcardsView.xaml.cs": {
@@ -540,9 +540,9 @@
     "semantic_hash": ""
   },
   "tests/SmartStudyAssistant.Tests/FlashcardGroupingAndAiCoordinatorTests.cs": {
-    "mtime": 1794831405.4223185,
-    "seen": 1794832299.8354037,
-    "ast_hash": "fe9553f5454a5e81688fc52414acd082",
+    "mtime": 1794833022.0212502,
+    "seen": 1794833083.9787097,
+    "ast_hash": "532441c1f92e54dac7d41d39ab038c91",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Core/Services/Database/SqlServerDatabaseService.cs": {
