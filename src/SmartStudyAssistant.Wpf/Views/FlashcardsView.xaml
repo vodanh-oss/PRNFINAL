@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:SmartStudyAssistant.Wpf.ViewModels"
+             xmlns:helpers="clr-namespace:SmartStudyAssistant.Wpf.Helpers"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:FlashcardsViewModel}"
              d:DesignHeight="700" d:DesignWidth="1000">
@@ -158,12 +159,11 @@
 
                         <!-- Back Face -->
                         <Grid Visibility="{Binding IsFlipped, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="540">
                                 <TextBlock Text="MẶT SAU (ĐÁP ÁN / GIẢI NGHĨA)" 
                                            Style="{StaticResource CaptionStyle}" Foreground="{StaticResource AccentSuccessBrush}" 
                                            HorizontalAlignment="Center" Margin="0,0,0,16" />
-                                <TextBlock Text="{Binding CurrentCard.Back}" 
-                                           Style="{StaticResource Header2TextStyle}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="520" />
+                                <StackPanel helpers:MarkdownRenderer.Text="{Binding CurrentCard.Back}" />
                             </StackPanel>
                         </Grid>
                     </Grid>

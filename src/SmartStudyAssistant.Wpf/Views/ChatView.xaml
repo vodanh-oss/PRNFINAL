@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:SmartStudyAssistant.Wpf.ViewModels"
+             xmlns:helpers="clr-namespace:SmartStudyAssistant.Wpf.Helpers"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:ChatViewModel}"
              d:DesignHeight="700" d:DesignWidth="1000">
@@ -128,12 +129,8 @@
                                                    Style="{StaticResource CaptionStyle}" />
                                     </StackPanel>
 
-                                    <!-- Content -->
-                                    <TextBox Text="{Binding Content, Mode=OneWay}" 
-                                             IsReadOnly="True" TextWrapping="Wrap"
-                                             Background="Transparent" BorderThickness="0"
-                                             Foreground="{StaticResource TextPrimaryBrush}"
-                                             FontSize="13.5" />
+                                    <!-- Formatted Markdown Content -->
+                                    <StackPanel helpers:MarkdownRenderer.Text="{Binding Content}" Margin="0,2,0,0" />
 
                                     <!-- Citations Bar (For Assistant) -->
                                     <StackPanel Margin="0,8,0,0" 
