@@ -11,8 +11,6 @@ public enum NavigationTab
     Chat,
     Documents,
     Flashcards,
-    Pomodoro,
-    Progress,
     Settings
 }
 
@@ -96,8 +94,6 @@ public partial class MainViewModel : ObservableObject
             "Chat" => ChatVm,
             "Documents" => DocumentsVm,
             "Flashcards" => FlashcardsVm,
-            "Pomodoro" => PomodoroVm,
-            "Progress" => ProgressVm,
             "Settings" => SettingsVm,
             _ => ChatVm
         };

@@ -27,8 +27,10 @@ Trợ lý Ôn thi & Học tập Sinh viên là ứng dụng máy tính (Desktop 
 - Chuyển đổi nhà cung cấp tức thời ngay trên giao diện chính.
 - Mã hóa an toàn khóa API bằng Windows DPAPI (`ProtectedData`).
 
-### C. Công cụ Năng suất Học tập
-- **Đồng hồ Pomodoro**: 25 phút học tập trung, 5 phút nghỉ ngắn, 15 phút nghỉ dài; thống kê số phiên hoàn thành trong ngày.
-- **Thẻ Flashcards**: Ôn tập ngắt quãng (Spaced Repetition) với 3 mức độ đánh giá (Khó, Tốt, Dễ); hỗ trợ AI tự động sinh thẻ từ bài học.
-- **Tiến độ Môn học & Checklist**: Theo dõi mục tiêu điểm số, tích hợp checklist đề cương tự động tính % tiến độ.
-- **Sổ tay Ghi chú**: Lưu lại nhanh chóng các câu trả lời hay từ AI hoặc tự ghi chép.
+### C. Ôn Tập Năng Suất với Thẻ Flashcards
+- **Thẻ Flashcards với Thanh Tiến Độ & Số Thẻ**: 
+  - Hiển thị trực quan số thẻ hiện tại và tổng số thẻ: `Thẻ X / Y` (đếm từ 1 chuẩn xác).
+  - Tích hợp thanh tiến độ `ProgressBar` và phần trăm tiến độ ôn tập (`{ProgressPercentage}%`) cập nhật mượt mà theo từng thẻ.
+  - Ôn tập ngắt quãng (Spaced Repetition) với 3 mức độ đánh giá: Khó (1 ngày), Tốt (3 ngày), Dễ (7 ngày).
+  - Nút lật thẻ 1-chạm hoặc click trực tiếp vào thẻ để xem đáp án.
+  - Hỗ trợ AI tự động sinh thẻ từ chủ đề học tập.

@@ -3,7 +3,10 @@
 ## Current Status: Completed & Verified (All 16 Tasks T101 - T116 Done)
 
 ### Completed Tasks
-- [x] **Fix Navigation Glitch**: Sửa lỗi không chuyển/thoát được màn hình Cấu hình. Nguyên nhân do 6 UserControl bị xếp chồng trong cùng ô Grid và gán DataContext trực tiếp làm hỏng binding Visibility. Đã chuyển đổi sang kiến trúc chuẩn `ContentControl Content="{Binding CurrentView}"` với DataTemplates, đảm bảo chuyển tab 100% mượt mà, dứt khoát.
+- [x] **Streamline Features**: Đã loại bỏ 2 chức năng Pomodoro và Tiến Độ Môn Học theo yêu cầu người dùng, giữ sidebar 4 chức năng cốt lõi tinh gọn: AI Chat & RAG, Tài Liệu & Slide, Thẻ Flashcards, Cấu Hình Nền Tảng.
+- [x] **Flashcard Progress & Counter**: Bổ sung thanh kiểm tra tiến độ `ProgressBar` và chỉ số thẻ chuẩn xác `Thẻ X / Y (Tiến độ: Z%)` trên màn hình Flashcards.
+- [x] **Light Theme**: Hoàn thiện toàn diện giao diện sáng (Light Theme) cao cấp, độ tương phản chuẩn WCAG AAA.
+- [x] **Fix Navigation Glitch**: Đảm bảo cơ chế chuyển màn hình qua `ContentControl` động, chuyển tab dứt khoát 100%.
 - [x] **T101**: Cập nhật Hiến pháp & Đặc tả chức năng (`specs/001-smart-study-assistant/spec.md`).
 - [x] **T102**: Lập tài liệu thiết kế sản phẩm và hệ thống giao diện (`PRODUCT.md` & `DESIGN.md`) theo chuẩn Impeccable & UI/UX Pro Max.
 - [x] **T103**: Chuẩn hóa bản vẽ kiến trúc kỹ thuật (`specs/001-smart-study-assistant/plan.md`) và danh mục công việc (`specs/001-smart-study-assistant/tasks.md`).

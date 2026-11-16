@@ -34,18 +34,18 @@ CitationBadgeTextBrush:#1D4ED8  (Blue 700 - Chữ huy hiệu trích dẫn slide 
 
 ## 3. Typography
 - **Font Family**: Segoe UI Variable, Segoe UI, sans-serif.
-- **Monospace**: Consolas, Cascadia Code (dùng cho đoạn trích code, API key, đồng hồ đếm giờ Pomodoro).
+- **Monospace**: Consolas, Cascadia Code (dùng cho đoạn trích code, API key, đường dẫn CSDL).
 - **Type Scale**:
-  - `Header 1`: 20pt, SemiBold, Foreground `#F8FAFC`
-  - `Header 2`: 16pt, SemiBold, Foreground `#F8FAFC`
-  - `Header 3`: 13pt, Medium, Foreground `#94A3B8` (Caps)
-  - `Body Text`: 13.5pt, Regular, Line-height thoải mái
-  - `Caption`: 11pt, Regular, Foreground `#94A3B8`
+  - `Header 1`: 20pt, SemiBold, Foreground `#0F172A`
+  - `Header 2`: 16pt, SemiBold, Foreground `#0F172A`
+  - `Header 3`: 13pt, Medium, Foreground `#475569` (Caps)
+  - `Body Text`: 13.5pt, Regular, Foreground `#0F172A`, Line-height thoải mái
+  - `Caption`: 11pt, Regular, Foreground `#64748B`
 
 ## 4. UI Layout Hierarchy
 1. **Sidebar Trái (Width: 240px)**:
    - Logo & Tên ứng dụng (SmartStudy).
-   - 6 Tabs chuyển màn hình: Chat & RAG, Tài Liệu & Slide, Flashcards, Pomodoro, Tiến Độ, Cấu Hình.
+   - 4 Tabs chuyển màn hình tinh gọn: 💬 AI Chat & RAG, 📚 Tài Liệu & Slide, 📇 Thẻ Flashcards, ⚙️ Cấu Hình Nền Tảng.
    - Hộp điều khiển chuyển đổi nhanh nền tảng AI (Gemini, OpenAI, Claude, Groq/Ollama).
 2. **Khu vực Nội dung Chính (Column 1)**:
    - Tiêu đề màn hình và phụ đề hướng dẫn.

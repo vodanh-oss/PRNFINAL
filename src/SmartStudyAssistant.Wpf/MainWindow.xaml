@@ -23,12 +23,6 @@
         <DataTemplate DataType="{x:Type vm:FlashcardsViewModel}">
             <views:FlashcardsView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:PomodoroViewModel}">
-            <views:PomodoroView />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:ProgressViewModel}">
-            <views:ProgressView />
-        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
             <views:SettingsView />
         </DataTemplate>
@@ -78,18 +72,6 @@
                     <!-- Flashcards -->
                     <Button Content="📇  Thẻ Flashcards" 
                             Command="{Binding NavigateCommand}" CommandParameter="Flashcards"
-                            Style="{StaticResource SecondaryButtonStyle}" 
-                            HorizontalContentAlignment="Left" Padding="14,10" Margin="0,0,0,6" />
-
-                    <!-- Pomodoro -->
-                    <Button Content="⏱️  Đồng Hồ Pomodoro" 
-                            Command="{Binding NavigateCommand}" CommandParameter="Pomodoro"
-                            Style="{StaticResource SecondaryButtonStyle}" 
-                            HorizontalContentAlignment="Left" Padding="14,10" Margin="0,0,0,6" />
-
-                    <!-- Progress & Checklist -->
-                    <Button Content="📊  Tiến Độ Môn Học" 
-                            Command="{Binding NavigateCommand}" CommandParameter="Progress"
                             Style="{StaticResource SecondaryButtonStyle}" 
                             HorizontalContentAlignment="Left" Padding="14,10" Margin="0,0,0,6" />
 

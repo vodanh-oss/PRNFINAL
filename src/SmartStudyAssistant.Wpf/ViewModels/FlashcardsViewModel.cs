@@ -22,6 +22,18 @@ public partial class FlashcardsViewModel : ObservableObject
     private int _currentCardIndex;
 
     [ObservableProperty]
+    private int _displayCardNumber = 1;
+
+    [ObservableProperty]
+    private int _totalCardsCount = 0;
+
+    [ObservableProperty]
+    private double _progressPercentage = 0;
+
+    [ObservableProperty]
+    private string _progressText = "Chưa có thẻ nào";
+
+    [ObservableProperty]
     private bool _isFlipped;
 
     [ObservableProperty]
@@ -53,18 +65,39 @@ public partial class FlashcardsViewModel : ObservableObject
         await LoadFlashcardsAsync();
     }
 
+    public void UpdateProgress()
+    {
+        TotalCardsCount = Flashcards.Count;
+        if (TotalCardsCount == 0)
+        {
+            DisplayCardNumber = 0;
+            ProgressPercentage = 0;
+            ProgressText = "Chưa có thẻ nào";
+            return;
+        }
+
+        DisplayCardNumber = CurrentCardIndex + 1;
+        ProgressPercentage = (double)DisplayCardNumber / TotalCardsCount * 100.0;
+        ProgressText = $"Thẻ {DisplayCardNumber} / {TotalCardsCount}";
+    }
+
     [RelayCommand]
     public async Task LoadFlashcardsAsync()
     {
         var list = await _databaseService.GetFlashcardsAsync();
         Flashcards = new ObservableCollection<Flashcard>(list);
 
-        if (Flashcards.Count > 0 && CurrentCard == null)
+        if (Flashcards.Count > 0)
         {
             CurrentCardIndex = 0;
             CurrentCard = Flashcards[0];
             IsFlipped = false;
         }
+        else
+        {
+            CurrentCard = null;
+        }
+        UpdateProgress();
     }
 
     [RelayCommand]
@@ -113,6 +146,7 @@ public partial class FlashcardsViewModel : ObservableObject
         CurrentCardIndex = (CurrentCardIndex + 1) % Flashcards.Count;
         CurrentCard = Flashcards[CurrentCardIndex];
         IsFlipped = false;
+        UpdateProgress();
     }
 
     [RelayCommand]
@@ -123,6 +157,7 @@ public partial class FlashcardsViewModel : ObservableObject
         CurrentCardIndex = (CurrentCardIndex - 1 + Flashcards.Count) % Flashcards.Count;
         CurrentCard = Flashcards[CurrentCardIndex];
         IsFlipped = false;
+        UpdateProgress();
     }
 
     [RelayCommand]
@@ -148,8 +183,9 @@ public partial class FlashcardsViewModel : ObservableObject
         if (CurrentCard == null)
         {
             CurrentCard = card;
-            CurrentCardIndex = Flashcards.Count - 1;
+            CurrentCardIndex = 0;
         }
+        UpdateProgress();
     }
 
     [RelayCommand]
@@ -157,12 +193,20 @@ public partial class FlashcardsViewModel : ObservableObject
     {
         await _databaseService.DeleteFlashcardAsync(card.Id);
         Flashcards.Remove(card);
-
         if (CurrentCard == card)
         {
-            CurrentCard = Flashcards.FirstOrDefault();
-            IsFlipped = false;
+            if (Flashcards.Count > 0)
+            {
+                CurrentCardIndex = Math.Min(CurrentCardIndex, Flashcards.Count - 1);
+                CurrentCard = Flashcards[CurrentCardIndex];
+            }
+            else
+            {
+                CurrentCard = null;
+                CurrentCardIndex = 0;
+            }
         }
+        UpdateProgress();
     }
 
     [RelayCommand]
