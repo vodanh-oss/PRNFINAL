@@ -9,27 +9,27 @@
 ## 2. Color Palette & Design Tokens
 
 ```xaml
-<!-- Background & Surface -->
-BackgroundBrush:       #0F172A  (Slate 900 - Nền chính cửa sổ)
-SurfaceBrush:          #1E293B  (Slate 800 - Khung sidebar, thẻ card)
-SurfaceAltBrush:       #334155  (Slate 700 - Ô nhập liệu, vùng thứ cấp)
-SurfaceBorderBrush:    #475569  (Slate 600 - Đường viền phân cách)
+<!-- Background & Surface (Light Theme) -->
+BackgroundBrush:       #F8FAFC  (Slate 50 - Nền sáng nhẹ dịu mắt, chống chói)
+SurfaceBrush:          #FFFFFF  (Pure White - Khung sidebar, thẻ card nổi bật)
+SurfaceAltBrush:       #F1F5F9  (Slate 100 - Ô nhập liệu, vùng thứ cấp)
+SurfaceBorderBrush:    #E2E8F0  (Slate 200 - Đường viền phân cách tinh tế)
 
 <!-- Brand & Accents -->
-PrimaryBrush:          #3B82F6  (Blue 500 - Nút chính, chỉ báo hoạt động)
-PrimaryHoverBrush:     #60A5FA  (Blue 400 - Trạng thái rê chuột)
-AccentSuccessBrush:    #10B981  (Emerald 500 - Thẻ dễ, hoàn thành môn, ping thành công)
-AccentWarningBrush:    #F59E0B  (Amber 500 - Thẻ vừa, cảnh báo kết nối)
-AccentDangerBrush:     #EF4444  (Rose 500 - Thẻ khó, nút xóa tài liệu)
+PrimaryBrush:          #2563EB  (Blue 600 - Nút chính, thương hiệu chuẩn)
+PrimaryHoverBrush:     #1D4ED8  (Blue 700 - Trạng thái rê chuột)
+AccentSuccessBrush:    #059669  (Emerald 600 - Thẻ dễ, hoàn thành môn, ping thành công)
+AccentWarningBrush:    #D97706  (Amber 600 - Thẻ vừa, cảnh báo kết nối)
+AccentDangerBrush:     #DC2626  (Red 600 - Thẻ khó, nút xóa tài liệu)
 
 <!-- Typography Colors -->
-TextPrimaryBrush:      #F8FAFC  (Slate 50 - Tiêu đề, nội dung chính)
-TextSecondaryBrush:    #94A3B8  (Slate 400 - Phụ đề, nhãn mô tả)
-TextMutedBrush:        #64748B  (Slate 500 - Timestamp, gợi ý ẩn)
+TextPrimaryBrush:      #0F172A  (Slate 900 - Tiêu đề, chữ đen than sắc nét, tương phản > 12:1)
+TextSecondaryBrush:    #475569  (Slate 600 - Phụ đề, nhãn mô tả)
+TextMutedBrush:        #64748B  (Slate 500 - Timestamp, gợi ý)
 
 <!-- RAG Citation Badges -->
-CitationBadgeBrush:    #1E3A8A  (Blue 900 - Nền huy hiệu trích dẫn slide)
-CitationBadgeTextBrush:#93C5FD  (Blue 300 - Chữ huy hiệu trích dẫn slide)
+CitationBadgeBrush:    #DBEAFE  (Blue 100 - Nền huy hiệu trích dẫn slide dịu mắt)
+CitationBadgeTextBrush:#1D4ED8  (Blue 700 - Chữ huy hiệu trích dẫn slide rõ nét)
 ```
 
 ## 3. Typography

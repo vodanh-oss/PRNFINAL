@@ -55,7 +55,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="🎓" FontSize="24" Margin="0,0,10,0" />
-                            <TextBlock Text="SmartStudy" Style="{StaticResource Header2TextStyle}" Foreground="#FFFFFF" />
+                            <TextBlock Text="SmartStudy" Style="{StaticResource Header2TextStyle}" Foreground="{StaticResource TextPrimaryBrush}" />
                         </StackPanel>
                         <TextBlock Text="AI Study &amp; RAG Assistant" Style="{StaticResource CaptionStyle}" Margin="34,2,0,0" />
                     </StackPanel>

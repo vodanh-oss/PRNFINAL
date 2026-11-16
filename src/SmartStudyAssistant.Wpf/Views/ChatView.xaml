@@ -116,6 +116,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border MaxWidth="720" Margin="0,8" Padding="14,12" CornerRadius="10"
+                                    BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1"
                                     HorizontalAlignment="{Binding Role, Converter={StaticResource RoleToAlignmentConverter}}"
                                     Background="{Binding Role, Converter={StaticResource RoleToBackgroundConverter}}">
                                 <StackPanel>

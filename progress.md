@@ -3,6 +3,7 @@
 ## Current Status: Completed & Verified (All 16 Tasks T101 - T116 Done)
 
 ### Completed Tasks
+- [x] **Fix Navigation Glitch**: Sửa lỗi không chuyển/thoát được màn hình Cấu hình. Nguyên nhân do 6 UserControl bị xếp chồng trong cùng ô Grid và gán DataContext trực tiếp làm hỏng binding Visibility. Đã chuyển đổi sang kiến trúc chuẩn `ContentControl Content="{Binding CurrentView}"` với DataTemplates, đảm bảo chuyển tab 100% mượt mà, dứt khoát.
 - [x] **T101**: Cập nhật Hiến pháp & Đặc tả chức năng (`specs/001-smart-study-assistant/spec.md`).
 - [x] **T102**: Lập tài liệu thiết kế sản phẩm và hệ thống giao diện (`PRODUCT.md` & `DESIGN.md`) theo chuẩn Impeccable & UI/UX Pro Max.
 - [x] **T103**: Chuẩn hóa bản vẽ kiến trúc kỹ thuật (`specs/001-smart-study-assistant/plan.md`) và danh mục công việc (`specs/001-smart-study-assistant/tasks.md`).
