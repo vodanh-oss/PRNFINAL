@@ -246,9 +246,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/MainWindow.xaml": {
-    "mtime": 1794819507.609671,
-    "seen": 1794826237.381291,
-    "ast_hash": "edbf9185b62e6d2c47cec05c1511c491",
+    "mtime": 1794827332.848217,
+    "seen": 1794827493.0178578,
+    "ast_hash": "4ea7526a02a50037af24117b293e04da",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/MainWindow.xaml.cs": {
@@ -264,15 +264,15 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Styles/Colors.xaml": {
-    "mtime": 1794818693.4969606,
-    "seen": 1794819413.404501,
-    "ast_hash": "91d026c530fb910bdabb666a40dee888",
+    "mtime": 1794827363.689723,
+    "seen": 1794827493.0178628,
+    "ast_hash": "283deba507ccaef76c6b043cff399cc6",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Styles/Controls.xaml": {
-    "mtime": 1794818713.2545197,
-    "seen": 1794819413.4045029,
-    "ast_hash": "fb7cfb4513ea6b1ac553daf6927c56c4",
+    "mtime": 1794827105.6599193,
+    "seen": 1794827493.0178642,
+    "ast_hash": "6003de3c7689bd2b954d0a9dda574147",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Styles/Typography.xaml": {
@@ -300,9 +300,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/MainViewModel.cs": {
-    "mtime": 1794818635.4646177,
-    "seen": 1794819413.404513,
-    "ast_hash": "8788ea954593b338966daedab849beac",
+    "mtime": 1794827105.7009008,
+    "seen": 1794827493.0178707,
+    "ast_hash": "f605a3108305ea7ba1d0d71f7591aad3",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/PomodoroViewModel.cs": {
@@ -324,9 +324,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/ChatView.xaml": {
-    "mtime": 1794826012.9737751,
-    "seen": 1794826237.3813095,
-    "ast_hash": "74a7958cabdc5c1e2f468638c738572a",
+    "mtime": 1794827346.4440525,
+    "seen": 1794827493.017876,
+    "ast_hash": "4a41ad3295f9eaea6aee1be50d9119d4",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/ChatView.xaml.cs": {
@@ -528,15 +528,15 @@
     "semantic_hash": ""
   },
   "findings.md": {
-    "mtime": 1794826543.3768656,
-    "seen": 1794826669.5215297,
+    "mtime": 1794826718.9528666,
+    "seen": 1794827493.0179274,
     "ast_hash": "f03afbe6035fbe949290fe32ddb67510",
     "semantic_hash": ""
   },
   "progress.md": {
-    "mtime": 1794826624.8916738,
-    "seen": 1794826669.5215323,
-    "ast_hash": "f5da0c373b7a0bb54c411eee39fba35e",
+    "mtime": 1794827087.152925,
+    "seen": 1794827493.0179286,
+    "ast_hash": "6c4ee0adda83a75546f09afc29a8366e",
     "semantic_hash": ""
   },
   "specs/001-smart-study-assistant/plan.md": {
@@ -558,8 +558,8 @@
     "semantic_hash": ""
   },
   "task_plan.md": {
-    "mtime": 1794826617.2640405,
-    "seen": 1794826669.5215485,
+    "mtime": 1794826719.613505,
+    "seen": 1794827493.0179338,
     "ast_hash": "9c48690820d986499497e612b45235fb",
     "semantic_hash": ""
   },
@@ -576,9 +576,9 @@
     "semantic_hash": ""
   },
   "DESIGN.md": {
-    "mtime": 1794826571.3932583,
-    "seen": 1794826669.521521,
-    "ast_hash": "f349e0d03028593736200c55c3b26cde",
+    "mtime": 1794827376.6864195,
+    "seen": 1794827493.0179234,
+    "ast_hash": "79103add16ea62dae891e2ce7ea26894",
     "semantic_hash": ""
   },
   "PRODUCT.md": {
