@@ -70,3 +70,13 @@
 
 - [x] **T026**: Viết bộ unit test `SmartStudyAssistant.Tests` (`TextChunkerTests`, `VectorSimilarityTests`, `PomodoroTimerTests`, `SecurityStorageTests`).
 - [x] **T027**: Chạy kiểm thử toàn bộ `dotnet test` và xác nhận tất cả test pass 100%.
+
+---
+
+## Phase 9: Tinh Gọn Trải Nghiệm & Quản Lý CSDL SQLite Đơn Giản
+
+- [x] **T028**: Quản lý duy nhất 1 tệp SQLite Database (`study_assistant.db`), hiển thị đường dẫn tệp minh bạch trên UI kèm nút mở thư mục file DB trực tiếp.
+- [x] **T029**: Tích hợp tính năng nạp dữ liệu mẫu ban đầu (Đề cương 4 slide, 2 môn học kèm checklist, 5 flashcard, 1 ghi chú) phục vụ demo và kiểm thử tức thì.
+- [x] **T030**: Bảng hướng dẫn bắt đầu nhanh (Quick Start Guide) 3 bước trong ChatView khi phiên học chưa có tin nhắn.
+- [x] **T031**: Nút lật thẻ đáp án trực tiếp trong FlashcardsView kết hợp phím tắt và click thẻ.
+- [x] **T032**: Bộ kiểm thử tự động cho SQLite Database Service (`DatabaseServiceTests.cs`), nâng tổng số test đạt 11/11 tests pass.
