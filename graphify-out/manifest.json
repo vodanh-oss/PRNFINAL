@@ -246,9 +246,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/MainWindow.xaml": {
-    "mtime": 1794827332.848217,
-    "seen": 1794827493.0178578,
-    "ast_hash": "4ea7526a02a50037af24117b293e04da",
+    "mtime": 1794827891.7382843,
+    "seen": 1794828171.883894,
+    "ast_hash": "dd377dc69b98b5bff3eb8f49d443ba61",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/MainWindow.xaml.cs": {
@@ -264,8 +264,8 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Styles/Colors.xaml": {
-    "mtime": 1794827363.689723,
-    "seen": 1794827493.0178628,
+    "mtime": 1794827531.4365733,
+    "seen": 1794828171.8838987,
     "ast_hash": "283deba507ccaef76c6b043cff399cc6",
     "semantic_hash": ""
   },
@@ -294,15 +294,15 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/FlashcardsViewModel.cs": {
-    "mtime": 1794820914.931539,
-    "seen": 1794826237.3813028,
-    "ast_hash": "1535492b9941bc93a2ee6aee0cb17cd1",
+    "mtime": 1794827926.9818428,
+    "seen": 1794828171.8839064,
+    "ast_hash": "61570dc772ab155975b3afba7452698d",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/MainViewModel.cs": {
-    "mtime": 1794827105.7009008,
-    "seen": 1794827493.0178707,
-    "ast_hash": "f605a3108305ea7ba1d0d71f7591aad3",
+    "mtime": 1794827907.1141214,
+    "seen": 1794828171.8839078,
+    "ast_hash": "81c1772ad11d835a9693342f721e59b7",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/PomodoroViewModel.cs": {
@@ -348,9 +348,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/FlashcardsView.xaml": {
-    "mtime": 1794826048.874792,
-    "seen": 1794826237.3813224,
-    "ast_hash": "8ece65f22c808b04452e9204a28375ef",
+    "mtime": 1794827868.275978,
+    "seen": 1794828171.88392,
+    "ast_hash": "afbd885680486f0f8bac584a0c258a24",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/FlashcardsView.xaml.cs": {
@@ -534,9 +534,9 @@
     "semantic_hash": ""
   },
   "progress.md": {
-    "mtime": 1794827087.152925,
-    "seen": 1794827493.0179286,
-    "ast_hash": "6c4ee0adda83a75546f09afc29a8366e",
+    "mtime": 1794828152.177916,
+    "seen": 1794828171.8840013,
+    "ast_hash": "2f7cc769a88572f6d9a71413137b6de0",
     "semantic_hash": ""
   },
   "specs/001-smart-study-assistant/plan.md": {
@@ -576,15 +576,15 @@
     "semantic_hash": ""
   },
   "DESIGN.md": {
-    "mtime": 1794827376.6864195,
-    "seen": 1794827493.0179234,
-    "ast_hash": "79103add16ea62dae891e2ce7ea26894",
+    "mtime": 1794828145.7303326,
+    "seen": 1794828171.8839953,
+    "ast_hash": "f02d72f8a9b490796f4bddd33844932a",
     "semantic_hash": ""
   },
   "PRODUCT.md": {
-    "mtime": 1794826559.4357412,
-    "seen": 1794826669.5215263,
-    "ast_hash": "b92eb0e68ce1431c17ebebfa6a9d1818",
+    "mtime": 1794828132.581802,
+    "seen": 1794828171.8839982,
+    "ast_hash": "6e1a863f82657a77f8599136f1c8ef81",
     "semantic_hash": ""
   }
 }
