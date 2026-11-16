@@ -53,17 +53,15 @@ public partial class App : Application
     {
         // Core Services
         services.AddSingleton<ISecureStorage, DpapiSecureStorage>();
-        services.AddSingleton<IDatabaseService, SqliteDatabaseService>();
+        services.AddSingleton<IDatabaseService, SqlServerDatabaseService>();
         services.AddSingleton<IRagEngine, VectorRagEngine>();
         services.AddSingleton<AiServiceCoordinator>();
 
-        // ViewModels
+        // ViewModels - 4 chuyên mục rõ ràng
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<ChatViewModel>();
         services.AddSingleton<DocumentsViewModel>();
         services.AddSingleton<FlashcardsViewModel>();
-        services.AddSingleton<PomodoroViewModel>();
-        services.AddSingleton<ProgressViewModel>();
         services.AddSingleton<SettingsViewModel>();
 
         // Views

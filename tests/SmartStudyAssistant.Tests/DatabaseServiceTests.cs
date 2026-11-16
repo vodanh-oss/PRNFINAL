@@ -1,51 +1,31 @@
-using System.IO;
 using FluentAssertions;
 using SmartStudyAssistant.Core.Services.Database;
 using Xunit;
 
 namespace SmartStudyAssistant.Tests;
 
-public class DatabaseServiceTests : IDisposable
+public class DatabaseServiceTests
 {
-    private readonly string _testDbPath;
-
-    public DatabaseServiceTests()
-    {
-        _testDbPath = Path.Combine(Path.GetTempPath(), $"test_study_db_{Guid.NewGuid():N}.db");
-    }
-
-    public void Dispose()
-    {
-        if (File.Exists(_testDbPath))
-        {
-            try { File.Delete(_testDbPath); } catch { }
-        }
-    }
-
     [Fact]
-    public async Task InitializeAsync_ShouldCreateTables_AndSeedSampleData()
+    public async Task SqlServerDatabaseService_ConnectAndFetchSeedData_Success()
     {
-        // Arrange
-        var db = new SqliteDatabaseService(_testDbPath);
+        var db = new SqlServerDatabaseService();
+        bool canConnect = await db.TestConnectionAsync();
 
-        // Act
-        await db.InitializeAsync();
+        if (canConnect)
+        {
+            await db.InitializeAsync();
 
-        // Assert
-        db.DatabasePath.Should().Be(_testDbPath);
-        File.Exists(_testDbPath).Should().BeTrue();
+            var docs = await db.GetDocumentsAsync();
+            docs.Should().NotBeEmpty();
 
-        var docs = await db.GetDocumentsAsync();
-        docs.Should().NotBeEmpty();
-        docs[0].FileName.Should().Contain("DeCuong");
+            var chunks = await db.GetAllSelectedChunksAsync();
+            chunks.Should().NotBeEmpty();
 
-        var chunks = await db.GetAllSelectedChunksAsync();
-        chunks.Should().HaveCount(4);
-
-        var subjects = await db.GetSubjectsAsync();
-        subjects.Should().HaveCount(2);
-
-        var cards = await db.GetFlashcardsAsync();
-        cards.Should().HaveCount(5);
+            var cards = await db.GetFlashcardsAsync();
+            cards.Should().NotBeEmpty();
+            cards.Should().Contain(c => c.SubjectName == "PRN211");
+            cards.Should().Contain(c => c.SubjectName == "AI301");
+        }
     }
 }

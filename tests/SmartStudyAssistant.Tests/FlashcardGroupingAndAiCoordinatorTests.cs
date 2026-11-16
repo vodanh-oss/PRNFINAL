@@ -21,10 +21,11 @@ public class FakeSecureStorage : ISecureStorage
 
 public class FakeDatabaseService : IDatabaseService
 {
-    public string DatabasePath => "fake.db";
+    public string ConnectionString { get; set; } = "Server=localhost;Database=SmartStudyDb;Integrated Security=True;TrustServerCertificate=True;";
     public List<Flashcard> Flashcards { get; set; } = new();
 
     public Task InitializeAsync() => Task.CompletedTask;
+    public Task<bool> TestConnectionAsync() => Task.FromResult(true);
     public Task<List<DocumentItem>> GetDocumentsAsync() => Task.FromResult(new List<DocumentItem>());
     public Task SaveDocumentAsync(DocumentItem doc) => Task.CompletedTask;
     public Task DeleteDocumentAsync(string documentId) => Task.CompletedTask;
@@ -37,6 +38,8 @@ public class FakeDatabaseService : IDatabaseService
     public Task DeleteSessionAsync(string id) => Task.CompletedTask;
     public Task<List<ChatMessage>> GetMessagesAsync(string sessionId) => Task.FromResult(new List<ChatMessage>());
     public Task SaveMessageAsync(ChatMessage message) => Task.CompletedTask;
+    public Task<string?> GetSettingAsync(string key) => Task.FromResult<string?>(null);
+    public Task SaveSettingAsync(string key, string value) => Task.CompletedTask;
     public Task<List<Flashcard>> GetFlashcardsAsync(string? subject = null)
     {
         if (string.IsNullOrWhiteSpace(subject))
@@ -55,14 +58,6 @@ public class FakeDatabaseService : IDatabaseService
         Flashcards.RemoveAll(f => f.Id == id);
         return Task.CompletedTask;
     }
-    public Task<List<SubjectItem>> GetSubjectsAsync() => Task.FromResult(new List<SubjectItem>());
-    public Task SaveSubjectAsync(SubjectItem subject) => Task.CompletedTask;
-    public Task DeleteSubjectAsync(string id) => Task.CompletedTask;
-    public Task<PomodoroStats> GetTodayPomodoroStatsAsync() => Task.FromResult(new PomodoroStats());
-    public Task RecordPomodoroSessionAsync(int focusMinutes) => Task.CompletedTask;
-    public Task<List<StudyNote>> GetNotesAsync() => Task.FromResult(new List<StudyNote>());
-    public Task SaveNoteAsync(StudyNote note) => Task.CompletedTask;
-    public Task DeleteNoteAsync(string id) => Task.CompletedTask;
     public Task SeedSampleDataAsync(bool force = false) => Task.CompletedTask;
 }
 

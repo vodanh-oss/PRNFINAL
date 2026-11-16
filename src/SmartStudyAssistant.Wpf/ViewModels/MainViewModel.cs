@@ -22,8 +22,6 @@ public partial class MainViewModel : ObservableObject
     public ChatViewModel ChatVm { get; }
     public DocumentsViewModel DocumentsVm { get; }
     public FlashcardsViewModel FlashcardsVm { get; }
-    public PomodoroViewModel PomodoroVm { get; }
-    public ProgressViewModel ProgressVm { get; }
     public SettingsViewModel SettingsVm { get; }
 
     [ObservableProperty]
@@ -39,9 +37,6 @@ public partial class MainViewModel : ObservableObject
     private AiProviderType _activeProviderType;
 
     [ObservableProperty]
-    private bool _isDarkTheme = true;
-
-    [ObservableProperty]
     private string _appTitle = "Smart Study Assistant - Trợ lý Ôn thi & Học tập Sinh viên";
 
     public MainViewModel(
@@ -50,8 +45,6 @@ public partial class MainViewModel : ObservableObject
         ChatViewModel chatVm,
         DocumentsViewModel documentsVm,
         FlashcardsViewModel flashcardsVm,
-        PomodoroViewModel pomodoroVm,
-        ProgressViewModel progressVm,
         SettingsViewModel settingsVm)
     {
         _databaseService = databaseService;
@@ -60,8 +53,6 @@ public partial class MainViewModel : ObservableObject
         ChatVm = chatVm;
         DocumentsVm = documentsVm;
         FlashcardsVm = flashcardsVm;
-        PomodoroVm = pomodoroVm;
-        ProgressVm = progressVm;
         SettingsVm = settingsVm;
 
         CurrentView = ChatVm;
@@ -81,8 +72,6 @@ public partial class MainViewModel : ObservableObject
         await ChatVm.InitializeAsync();
         await DocumentsVm.InitializeAsync();
         await FlashcardsVm.InitializeAsync();
-        await PomodoroVm.InitializeAsync();
-        await ProgressVm.InitializeAsync();
     }
 
     [RelayCommand]
@@ -98,15 +87,14 @@ public partial class MainViewModel : ObservableObject
             _ => ChatVm
         };
 
-        if (Enum.TryParse<NavigationTab>(tab, out var parsedTab))
+        SelectedTab = tab switch
         {
-            SelectedTab = parsedTab;
-        }
-    }
-
-    public void NavigateToTab(NavigationTab tab)
-    {
-        Navigate(tab.ToString());
+            "Chat" => NavigationTab.Chat,
+            "Documents" => NavigationTab.Documents,
+            "Flashcards" => NavigationTab.Flashcards,
+            "Settings" => NavigationTab.Settings,
+            _ => NavigationTab.Chat
+        };
     }
 
     [RelayCommand]
@@ -114,11 +102,5 @@ public partial class MainViewModel : ObservableObject
     {
         _aiCoordinator.CurrentProviderType = type;
         ActiveProviderType = type;
-    }
-
-    [RelayCommand]
-    private void ToggleTheme()
-    {
-        IsDarkTheme = !IsDarkTheme;
     }
 }

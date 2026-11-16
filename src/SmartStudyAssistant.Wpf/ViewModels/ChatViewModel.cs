@@ -242,14 +242,15 @@ public partial class ChatViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task SaveAsNoteAsync(ChatMessage msg)
+    private async Task SaveAsFlashcardAsync(ChatMessage msg)
     {
-        var note = new StudyNote
+        var card = new Flashcard
         {
-            Title = $"Ghi chú từ {msg.ProviderUsed ?? "AI"} ({DateTime.Now:dd/MM/yyyy HH:mm})",
-            Content = msg.Content,
-            SubjectName = "Ôn tập"
+            Front = "Kiến thức trọng tâm từ Chat",
+            Back = msg.Content,
+            SubjectName = "Chung",
+            NextReviewDate = DateTime.UtcNow
         };
-        await _databaseService.SaveNoteAsync(note);
+        await _databaseService.SaveFlashcardAsync(card);
     }
 }

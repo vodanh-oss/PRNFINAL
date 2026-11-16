@@ -168,9 +168,9 @@
                                         </ItemsControl>
                                     </StackPanel>
 
-                                    <!-- Action Bar (Save to Note) -->
-                                    <Button Content="💾 Lưu thành Ghi chú" 
-                                            Command="{Binding DataContext.SaveAsNoteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    <!-- Action Bar (Save to Flashcard) -->
+                                    <Button Content="📇 Lưu thành Thẻ Flashcard" 
+                                            Command="{Binding DataContext.SaveAsFlashcardCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
                                             Background="Transparent" BorderThickness="0" 
                                             Foreground="{StaticResource TextMutedBrush}"

@@ -49,13 +49,20 @@ public partial class SettingsViewModel : ObservableObject
     private string _globalStatusMessage = string.Empty;
 
     [ObservableProperty]
-    private string _databasePath = string.Empty;
+    private string _sqlConnectionString = SqlServerDatabaseService.DefaultConnectionString;
+
+    [ObservableProperty]
+    private string _sqlConnectionStatus = "Chưa kiểm tra";
+
+    [ObservableProperty]
+    private bool? _isSqlConnected;
 
     public SettingsViewModel(AiServiceCoordinator aiCoordinator, IDatabaseService databaseService)
     {
         _aiCoordinator = aiCoordinator;
         _databaseService = databaseService;
-        DatabasePath = _databaseService.DatabasePath;
+        SqlConnectionString = _databaseService.ConnectionString;
+
         LoadProviders();
     }
 
@@ -85,12 +92,11 @@ public partial class SettingsViewModel : ObservableObject
         if (SelectedProvider == null) return;
 
         IsBusy = true;
-        SelectedProvider.TestStatus = "Đang kiểm tra...";
+        SelectedProvider.TestStatus = "Đang kiểm tra kết nối...";
         SelectedProvider.IsHealthy = null;
 
         try
         {
-            // Save temporary config to coordinator to test
             var tempConfig = new AiProviderConfig
             {
                 ProviderType = SelectedProvider.ProviderType,
@@ -139,7 +145,7 @@ public partial class SettingsViewModel : ObservableObject
             _aiCoordinator.UpdateProviderConfig(config);
         }
 
-        GlobalStatusMessage = "Đã lưu cài đặt và mã hóa bảo mật an toàn qua DPAPI!";
+        GlobalStatusMessage = "✓ Đã lưu cấu hình AI thành công (Bảo mật qua Windows DPAPI)!";
     }
 
     [RelayCommand]
@@ -154,23 +160,31 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenDatabaseFolder()
+    private async Task TestSqlConnectionAsync()
     {
+        IsBusy = true;
+        SqlConnectionStatus = "Đang kết nối tới SQL Server (SSMS)...";
+        IsSqlConnected = null;
+
         try
         {
-            var dir = System.IO.Path.GetDirectoryName(DatabasePath);
-            if (!string.IsNullOrEmpty(dir) && System.IO.Directory.Exists(dir))
-            {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = dir,
-                    UseShellExecute = true
-                });
-            }
+            _databaseService.ConnectionString = SqlConnectionString.Trim();
+            bool connected = await _databaseService.TestConnectionAsync();
+            IsSqlConnected = connected;
+            SqlConnectionStatus = connected 
+                ? "✓ Kết nối thành công tới SQL Server (SSMS)! Database: SmartStudyDb" 
+                : "✗ Không thể kết nối tới SQL Server với chuỗi kết nối trên.";
+            GlobalStatusMessage = SqlConnectionStatus;
         }
         catch (Exception ex)
         {
-            GlobalStatusMessage = "Không thể mở thư mục: " + ex.Message;
+            IsSqlConnected = false;
+            SqlConnectionStatus = "✗ Lỗi kết nối SQL Server: " + ex.Message;
+            GlobalStatusMessage = SqlConnectionStatus;
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
@@ -181,7 +195,7 @@ public partial class SettingsViewModel : ObservableObject
         try
         {
             await _databaseService.SeedSampleDataAsync(force: true);
-            GlobalStatusMessage = "✓ Đã khởi tạo lại dữ liệu bài giảng, flashcards và checklist môn học mẫu thành công!";
+            GlobalStatusMessage = "✓ Đã khởi tạo lại toàn bộ dữ liệu mẫu trong SQL Server (SSMS) thành công!";
         }
         catch (Exception ex)
         {
