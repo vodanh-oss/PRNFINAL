@@ -7,10 +7,31 @@ using SmartStudyAssistant.Core.Services.Database;
 
 namespace SmartStudyAssistant.Wpf.ViewModels;
 
+public partial class FlashcardGroupItem : ObservableObject
+{
+    [ObservableProperty]
+    private string _groupName = string.Empty;
+
+    [ObservableProperty]
+    private int _cardCount;
+
+    [ObservableProperty]
+    private bool _isSelected;
+
+    public string DisplayText => $"{GroupName} ({CardCount})";
+}
+
 public partial class FlashcardsViewModel : ObservableObject
 {
     private readonly IDatabaseService _databaseService;
     private readonly AiServiceCoordinator _aiCoordinator;
+    private List<Flashcard> _allCards = new();
+
+    [ObservableProperty]
+    private ObservableCollection<FlashcardGroupItem> _groupItems = new();
+
+    [ObservableProperty]
+    private string _selectedGroupName = "Tất cả";
 
     [ObservableProperty]
     private ObservableCollection<Flashcard> _flashcards = new();
@@ -65,31 +86,75 @@ public partial class FlashcardsViewModel : ObservableObject
         await LoadFlashcardsAsync();
     }
 
-    public void UpdateProgress()
+    public void RefreshGroups(string? preferredGroup = null)
     {
-        TotalCardsCount = Flashcards.Count;
-        if (TotalCardsCount == 0)
+        var distinctSubjects = _allCards
+            .Select(c => string.IsNullOrWhiteSpace(c.SubjectName) ? "Chung" : c.SubjectName.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(s => s)
+            .ToList();
+
+        var newGroupList = new ObservableCollection<FlashcardGroupItem>();
+
+        // Always add "Tất cả" as first group
+        newGroupList.Add(new FlashcardGroupItem
         {
-            DisplayCardNumber = 0;
-            ProgressPercentage = 0;
-            ProgressText = "Chưa có thẻ nào";
-            return;
+            GroupName = "Tất cả",
+            CardCount = _allCards.Count
+        });
+
+        foreach (var sub in distinctSubjects)
+        {
+            int count = _allCards.Count(c =>
+                (string.IsNullOrWhiteSpace(c.SubjectName) ? "Chung" : c.SubjectName.Trim())
+                .Equals(sub, StringComparison.OrdinalIgnoreCase));
+
+            newGroupList.Add(new FlashcardGroupItem
+            {
+                GroupName = sub,
+                CardCount = count
+            });
         }
 
-        DisplayCardNumber = CurrentCardIndex + 1;
-        ProgressPercentage = (double)DisplayCardNumber / TotalCardsCount * 100.0;
-        ProgressText = $"Thẻ {DisplayCardNumber} / {TotalCardsCount}";
+        GroupItems = newGroupList;
+
+        // Select preferred group or fallback to currently selected or first
+        if (!string.IsNullOrWhiteSpace(preferredGroup) &&
+            GroupItems.Any(g => g.GroupName.Equals(preferredGroup, StringComparison.OrdinalIgnoreCase)))
+        {
+            SelectedGroupName = GroupItems.First(g => g.GroupName.Equals(preferredGroup, StringComparison.OrdinalIgnoreCase)).GroupName;
+        }
+        else if (!GroupItems.Any(g => g.GroupName.Equals(SelectedGroupName, StringComparison.OrdinalIgnoreCase)))
+        {
+            SelectedGroupName = GroupItems.Count > 1 ? GroupItems[1].GroupName : "Tất cả";
+        }
+
+        foreach (var item in GroupItems)
+        {
+            item.IsSelected = item.GroupName.Equals(SelectedGroupName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        ApplyGroupFilter();
     }
 
-    [RelayCommand]
-    public async Task LoadFlashcardsAsync()
+    public void ApplyGroupFilter()
     {
-        var list = await _databaseService.GetFlashcardsAsync();
-        Flashcards = new ObservableCollection<Flashcard>(list);
+        if (SelectedGroupName == "Tất cả")
+        {
+            Flashcards = new ObservableCollection<Flashcard>(_allCards);
+        }
+        else
+        {
+            var filtered = _allCards
+                .Where(c => (string.IsNullOrWhiteSpace(c.SubjectName) ? "Chung" : c.SubjectName.Trim())
+                    .Equals(SelectedGroupName, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            Flashcards = new ObservableCollection<Flashcard>(filtered);
+        }
 
+        CurrentCardIndex = 0;
         if (Flashcards.Count > 0)
         {
-            CurrentCardIndex = 0;
             CurrentCard = Flashcards[0];
             IsFlipped = false;
         }
@@ -97,7 +162,50 @@ public partial class FlashcardsViewModel : ObservableObject
         {
             CurrentCard = null;
         }
+
+        if (SelectedGroupName != "Tất cả")
+        {
+            NewSubject = SelectedGroupName;
+        }
+
         UpdateProgress();
+    }
+
+    [RelayCommand]
+    public void SelectGroup(string groupName)
+    {
+        if (string.IsNullOrWhiteSpace(groupName)) return;
+
+        SelectedGroupName = groupName;
+        foreach (var item in GroupItems)
+        {
+            item.IsSelected = item.GroupName.Equals(groupName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        ApplyGroupFilter();
+    }
+
+    public void UpdateProgress()
+    {
+        TotalCardsCount = Flashcards.Count;
+        if (TotalCardsCount == 0)
+        {
+            DisplayCardNumber = 0;
+            ProgressPercentage = 0;
+            ProgressText = $"Nhóm: {SelectedGroupName} | Chưa có thẻ nào";
+            return;
+        }
+
+        DisplayCardNumber = CurrentCardIndex + 1;
+        ProgressPercentage = (double)DisplayCardNumber / TotalCardsCount * 100.0;
+        ProgressText = $"Nhóm: {SelectedGroupName} | Thẻ {DisplayCardNumber} / {TotalCardsCount}";
+    }
+
+    [RelayCommand]
+    public async Task LoadFlashcardsAsync()
+    {
+        _allCards = await _databaseService.GetFlashcardsAsync();
+        RefreshGroups(SelectedGroupName);
     }
 
     [RelayCommand]
@@ -166,47 +274,31 @@ public partial class FlashcardsViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(NewFront) || string.IsNullOrWhiteSpace(NewBack))
             return;
 
+        var subject = string.IsNullOrWhiteSpace(NewSubject) ? "Chung" : NewSubject.Trim();
         var card = new Flashcard
         {
             Front = NewFront.Trim(),
             Back = NewBack.Trim(),
-            SubjectName = string.IsNullOrWhiteSpace(NewSubject) ? "Chung" : NewSubject.Trim(),
+            SubjectName = subject,
             NextReviewDate = DateTime.UtcNow
         };
 
         await _databaseService.SaveFlashcardAsync(card);
-        Flashcards.Add(card);
+        _allCards.Add(card);
 
         NewFront = string.Empty;
         NewBack = string.Empty;
 
-        if (CurrentCard == null)
-        {
-            CurrentCard = card;
-            CurrentCardIndex = 0;
-        }
-        UpdateProgress();
+        RefreshGroups(subject);
     }
 
     [RelayCommand]
     private async Task DeleteCardAsync(Flashcard card)
     {
         await _databaseService.DeleteFlashcardAsync(card.Id);
-        Flashcards.Remove(card);
-        if (CurrentCard == card)
-        {
-            if (Flashcards.Count > 0)
-            {
-                CurrentCardIndex = Math.Min(CurrentCardIndex, Flashcards.Count - 1);
-                CurrentCard = Flashcards[CurrentCardIndex];
-            }
-            else
-            {
-                CurrentCard = null;
-                CurrentCardIndex = 0;
-            }
-        }
-        UpdateProgress();
+        _allCards.Remove(card);
+
+        RefreshGroups(SelectedGroupName);
     }
 
     [RelayCommand]
@@ -228,6 +320,7 @@ public partial class FlashcardsViewModel : ObservableObject
             var history = new[] { new ChatMessage { Role = "user", Content = prompt } };
             var response = await _aiCoordinator.SendMessageAsync(history);
 
+            var topic = AiGenerateTopic.Trim();
             var lines = response.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines)
             {
@@ -243,24 +336,21 @@ public partial class FlashcardsViewModel : ObservableObject
                         {
                             Front = front,
                             Back = back,
-                            SubjectName = AiGenerateTopic,
+                            SubjectName = topic,
                             NextReviewDate = DateTime.UtcNow
                         };
                         await _databaseService.SaveFlashcardAsync(card);
-                        Flashcards.Add(card);
+                        _allCards.Add(card);
                     }
                 }
             }
 
             AiGenerateTopic = string.Empty;
-            if (CurrentCard == null && Flashcards.Count > 0)
-            {
-                CurrentCard = Flashcards[0];
-            }
+            RefreshGroups(topic);
         }
         catch
         {
-            // Handled
+            // Handled gracefully
         }
         finally
         {

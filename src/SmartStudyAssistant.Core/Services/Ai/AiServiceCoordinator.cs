@@ -106,37 +106,99 @@ public class AiServiceCoordinator
         return GetCurrentProvider().StreamMessageAsync(history, systemPrompt, ct);
     }
 
-    public async Task<float[]?> GenerateEmbeddingAsync(string text, CancellationToken ct = default)
+    public bool HasActiveEmbeddingProvider()
     {
-        // 1. Try current provider if it supports embedding
+        // 1. If Ollama is the selected provider, it may run locally
+        if (_currentProviderType == AiProviderType.Ollama)
+        {
+            return true;
+        }
+
+        // 2. Current provider supports embedding and has an API key
         var current = GetCurrentProvider();
         if (current.Config.SupportsEmbedding && !string.IsNullOrWhiteSpace(current.Config.ApiKey))
         {
-            var emb = await current.GenerateEmbeddingAsync(text, ct);
-            if (emb != null) return emb;
+            return true;
         }
 
-        // 2. Try Gemini
+        // 3. Gemini has API key
         if (_providers.TryGetValue(AiProviderType.Gemini, out var gemini) &&
             !string.IsNullOrWhiteSpace(gemini.Config.ApiKey))
         {
-            var emb = await gemini.GenerateEmbeddingAsync(text, ct);
-            if (emb != null) return emb;
+            return true;
         }
 
-        // 3. Try OpenAI
+        // 4. OpenAI has API key
         if (_providers.TryGetValue(AiProviderType.OpenAi, out var openAi) &&
             !string.IsNullOrWhiteSpace(openAi.Config.ApiKey))
         {
-            var emb = await openAi.GenerateEmbeddingAsync(text, ct);
-            if (emb != null) return emb;
+            return true;
         }
 
-        // 4. Try Ollama (often runs locally without key)
-        if (_providers.TryGetValue(AiProviderType.Ollama, out var ollama))
+        return false;
+    }
+
+    public async Task<float[]?> GenerateEmbeddingAsync(string text, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return null;
+
+        // 1. Try current provider if it supports embedding and has an API key
+        var current = GetCurrentProvider();
+        if (current.Config.SupportsEmbedding && !string.IsNullOrWhiteSpace(current.Config.ApiKey))
         {
-            var emb = await ollama.GenerateEmbeddingAsync(text, ct);
-            if (emb != null) return emb;
+            try
+            {
+                var emb = await current.GenerateEmbeddingAsync(text, ct);
+                if (emb != null) return emb;
+            }
+            catch
+            {
+                // Fall through to next available provider
+            }
+        }
+
+        // 2. Try Gemini if configured with an API key
+        if (_providers.TryGetValue(AiProviderType.Gemini, out var gemini) &&
+            !string.IsNullOrWhiteSpace(gemini.Config.ApiKey))
+        {
+            try
+            {
+                var emb = await gemini.GenerateEmbeddingAsync(text, ct);
+                if (emb != null) return emb;
+            }
+            catch
+            {
+                // Fall through
+            }
+        }
+
+        // 3. Try OpenAI if configured with an API key
+        if (_providers.TryGetValue(AiProviderType.OpenAi, out var openAi) &&
+            !string.IsNullOrWhiteSpace(openAi.Config.ApiKey))
+        {
+            try
+            {
+                var emb = await openAi.GenerateEmbeddingAsync(text, ct);
+                if (emb != null) return emb;
+            }
+            catch
+            {
+                // Fall through
+            }
+        }
+
+        // 4. ONLY probe Ollama if it is the explicitly active provider to avoid TCP connection timeouts
+        if (_currentProviderType == AiProviderType.Ollama && _providers.TryGetValue(AiProviderType.Ollama, out var ollama))
+        {
+            try
+            {
+                var emb = await ollama.GenerateEmbeddingAsync(text, ct);
+                if (emb != null) return emb;
+            }
+            catch
+            {
+                // Local server unreachable
+            }
         }
 
         return null;

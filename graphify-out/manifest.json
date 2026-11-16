@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Core/Services/Ai/AiServiceCoordinator.cs": {
-    "mtime": 1794818534.0619967,
-    "seen": 1794819413.404456,
-    "ast_hash": "3d8057f0d00a50aaf82a381cb8a53b40",
+    "mtime": 1794828745.277663,
+    "seen": 1794829060.5052009,
+    "ast_hash": "cfe5578a4ffc94cb8ab8a7b9991245a2",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Core/Services/Ai/ClaudeAiProvider.cs": {
@@ -246,8 +246,8 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/MainWindow.xaml": {
-    "mtime": 1794827891.7382843,
-    "seen": 1794828171.883894,
+    "mtime": 1794828197.3612733,
+    "seen": 1794829060.5052586,
     "ast_hash": "dd377dc69b98b5bff3eb8f49d443ba61",
     "semantic_hash": ""
   },
@@ -288,20 +288,20 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/DocumentsViewModel.cs": {
-    "mtime": 1794825944.6790047,
-    "seen": 1794826237.3813014,
-    "ast_hash": "e00116a111b90a857d6be9a5bcb9f217",
+    "mtime": 1794828756.615845,
+    "seen": 1794829060.5052772,
+    "ast_hash": "32493bf5fabda4625b058b1725de9a2c",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/FlashcardsViewModel.cs": {
-    "mtime": 1794827926.9818428,
-    "seen": 1794828171.8839064,
-    "ast_hash": "61570dc772ab155975b3afba7452698d",
+    "mtime": 1794828796.2584765,
+    "seen": 1794829060.5052795,
+    "ast_hash": "d2839f28d719b18bdcc567b7b05df1d5",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/ViewModels/MainViewModel.cs": {
-    "mtime": 1794827907.1141214,
-    "seen": 1794828171.8839078,
+    "mtime": 1794828197.497531,
+    "seen": 1794829060.5052824,
     "ast_hash": "81c1772ad11d835a9693342f721e59b7",
     "semantic_hash": ""
   },
@@ -336,9 +336,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/DocumentsView.xaml": {
-    "mtime": 1794826276.899418,
-    "seen": 1794826669.5214412,
-    "ast_hash": "b8b2bdce248b20a4cfda2440673e9bcd",
+    "mtime": 1794828767.3521042,
+    "seen": 1794829060.5052981,
+    "ast_hash": "e5f5fd0b9162a8ff2c40c802cfae601b",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/DocumentsView.xaml.cs": {
@@ -348,9 +348,9 @@
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/FlashcardsView.xaml": {
-    "mtime": 1794827868.275978,
-    "seen": 1794828171.88392,
-    "ast_hash": "afbd885680486f0f8bac584a0c258a24",
+    "mtime": 1794828833.898963,
+    "seen": 1794829060.5053122,
+    "ast_hash": "906c9f6256c940d3a3915d3b249bbb20",
     "semantic_hash": ""
   },
   "src/SmartStudyAssistant.Wpf/Views/FlashcardsView.xaml.cs": {
@@ -402,15 +402,15 @@
     "semantic_hash": ""
   },
   "tests/SmartStudyAssistant.Tests/SecurityStorageTests.cs": {
-    "mtime": 1794818977.376555,
-    "seen": 1794819413.404545,
-    "ast_hash": "0789b1302576d46c720e4ade77e6c770",
+    "mtime": 1794829024.698315,
+    "seen": 1794829060.5053427,
+    "ast_hash": "d6acba51f1a0417d4e469e4b0ea0db81",
     "semantic_hash": ""
   },
   "tests/SmartStudyAssistant.Tests/SmartStudyAssistant.Tests.csproj": {
-    "mtime": 1794819508.9200077,
-    "seen": 1794826237.381339,
-    "ast_hash": "3d99d7398fd1847de2ff62a52964a37d",
+    "mtime": 1794828915.5716994,
+    "seen": 1794829060.505345,
+    "ast_hash": "05b49a0c03e8708233c3af61e4d9db67",
     "semantic_hash": ""
   },
   "tests/SmartStudyAssistant.Tests/TextChunkerTests.cs": {
@@ -534,8 +534,8 @@
     "semantic_hash": ""
   },
   "progress.md": {
-    "mtime": 1794828152.177916,
-    "seen": 1794828171.8840013,
+    "mtime": 1794828197.286367,
+    "seen": 1794829060.5054119,
     "ast_hash": "2f7cc769a88572f6d9a71413137b6de0",
     "semantic_hash": ""
   },
@@ -564,9 +564,9 @@
     "semantic_hash": ""
   },
   "tests/SmartStudyAssistant.Tests/DatabaseServiceTests.cs": {
-    "mtime": 1794826134.9998965,
-    "seen": 1794826237.3813343,
-    "ast_hash": "4f092c2000e9fdf46ae43b46f0cf2dcf",
+    "mtime": 1794829020.4802644,
+    "seen": 1794829060.5053344,
+    "ast_hash": "e11c96c0d01f50c8b19babe055325076",
     "semantic_hash": ""
   },
   ".agent/skills/antigravity-skills-manager/SKILL.md": {
@@ -576,15 +576,21 @@
     "semantic_hash": ""
   },
   "DESIGN.md": {
-    "mtime": 1794828145.7303326,
-    "seen": 1794828171.8839953,
+    "mtime": 1794828196.9817958,
+    "seen": 1794829060.505401,
     "ast_hash": "f02d72f8a9b490796f4bddd33844932a",
     "semantic_hash": ""
   },
   "PRODUCT.md": {
-    "mtime": 1794828132.581802,
-    "seen": 1794828171.8839982,
+    "mtime": 1794828197.1324885,
+    "seen": 1794829060.5054061,
     "ast_hash": "6e1a863f82657a77f8599136f1c8ef81",
+    "semantic_hash": ""
+  },
+  "tests/SmartStudyAssistant.Tests/FlashcardGroupingAndAiCoordinatorTests.cs": {
+    "mtime": 1794828974.216426,
+    "seen": 1794829060.5053372,
+    "ast_hash": "3898b43f56931de133d9101cd2a248a8",
     "semantic_hash": ""
   }
 }

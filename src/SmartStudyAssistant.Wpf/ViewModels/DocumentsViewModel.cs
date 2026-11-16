@@ -157,21 +157,47 @@ public partial class DocumentsViewModel : ObservableObject
                 var chunks = _chunker.CreateChunks(docItem.Id, parsed);
                 docItem.TotalChunks = chunks.Count;
 
-                // Generate embeddings if configured
-                ProcessingStatus = $"Đang lập chỉ mục vector cho {chunks.Count} đoạn ({fileName})...";
-                int chunkCounter = 0;
-                foreach (var chunk in chunks)
+                // Check if active embedding provider is available (Gemini / OpenAI / Ollama)
+                bool hasEmbeddingProvider = _aiCoordinator.HasActiveEmbeddingProvider();
+                if (!hasEmbeddingProvider)
                 {
-                    chunkCounter++;
-                    chunk.Embedding = await _aiCoordinator.GenerateEmbeddingAsync(chunk.TextContent);
-                    ProcessingProgress = (double)chunkCounter / chunks.Count * 100.0;
+                    // Instant vector indexing via internal TF-IDF (takes < 0.1s)
+                    ProcessingStatus = $"Lập chỉ mục nhanh (Vector TF-IDF) cho {chunks.Count} đoạn ({fileName})...";
+                    ProcessingProgress = 100;
+                }
+                else
+                {
+                    // Parallel batch embedding with 4s timeout per chunk
+                    ProcessingStatus = $"Đang lập chỉ mục vector embedding cho {chunks.Count} đoạn ({fileName})...";
+                    int completedChunks = 0;
+                    var parallelOptions = new ParallelOptions
+                    {
+                        MaxDegreeOfParallelism = Math.Min(Environment.ProcessorCount, 6),
+                        CancellationToken = CancellationToken.None
+                    };
+
+                    await Parallel.ForEachAsync(chunks, parallelOptions, async (chunk, _) =>
+                    {
+                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(4));
+                        try
+                        {
+                            chunk.Embedding = await _aiCoordinator.GenerateEmbeddingAsync(chunk.TextContent, cts.Token);
+                        }
+                        catch
+                        {
+                            chunk.Embedding = null;
+                        }
+
+                        var done = Interlocked.Increment(ref completedChunks);
+                        ProcessingProgress = (double)done / chunks.Count * 100.0;
+                    });
                 }
 
                 await _databaseService.SaveDocumentAsync(docItem);
                 await _databaseService.SaveChunksAsync(chunks);
             }
 
-            ProcessingStatus = "Hoàn tất xử lý tài liệu!";
+            ProcessingStatus = "✓ Hoàn tất trích xuất và lập chỉ mục tài liệu!";
             await LoadDocumentsAsync();
         }
         catch (Exception ex)

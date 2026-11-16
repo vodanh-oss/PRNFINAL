@@ -31,12 +31,81 @@
             <Grid Grid.Column="0" Margin="0,0,16,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!-- Progress Bar & Card Counter -->
+                <!-- Deck / Group Selection Chips Bar -->
                 <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}" 
+                        BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1" 
+                        CornerRadius="10" Padding="12,10" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0">
+                            <TextBlock Text="📂 Nhóm môn học:" FontWeight="Bold" FontSize="12" 
+                                       Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding GroupItems}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.SelectGroupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding GroupName}"
+                                                Margin="0,0,8,0" Padding="12,5" Cursor="Hand" BorderThickness="1">
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Background" Value="{StaticResource SurfaceAltBrush}" />
+                                                    <Setter Property="BorderBrush" Value="{StaticResource SurfaceBorderBrush}" />
+                                                    <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                                                    <Setter Property="FontWeight" Value="Normal" />
+                                                    <Setter Property="FontSize" Value="12" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border Background="{TemplateBinding Background}" 
+                                                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                                                        CornerRadius="14" Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                            <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
+                                                            <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+                                                            <Setter Property="Foreground" Value="#FFFFFF" />
+                                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                                        </DataTrigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Opacity" Value="0.9" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                            <TextBlock Text="{Binding DisplayText}" />
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                <!-- Progress Bar & Card Counter -->
+                <Border Grid.Row="1" Background="{StaticResource SurfaceBrush}" 
                         BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1" 
                         CornerRadius="10" Padding="16,12" Margin="0,0,0,16">
                     <Grid>
@@ -67,7 +136,7 @@
                 </Border>
 
                 <!-- Interactive Card Body -->
-                <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}"
+                <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}"
                         Background="{StaticResource SurfaceBrush}"
                         BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="2"
                         Cursor="Hand" CornerRadius="16" Padding="32">
@@ -101,7 +170,7 @@
                 </Border>
 
                 <!-- Review & Rating Action Bar -->
-                <Grid Grid.Row="2" Margin="0,16,0,0">
+                <Grid Grid.Row="3" Margin="0,16,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />

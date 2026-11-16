@@ -51,6 +51,11 @@
                     <TextBlock Text="{Binding ProcessingStatus}" Style="{StaticResource CaptionStyle}" 
                                HorizontalAlignment="Center" Margin="0,6,0,0" />
                 </StackPanel>
+
+                <!-- Informative Fast Indexing Note -->
+                <TextBlock Text="⚡ Lập chỉ mục siêu tốc: Tự động dùng TF-IDF Vector nội bộ tức thì, kết hợp Dense Embedding khi có API Key." 
+                           Style="{StaticResource CaptionStyle}" Foreground="{StaticResource TextSecondaryBrush}"
+                           HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
 

@@ -1,3 +1,4 @@
+using System.IO;
 using FluentAssertions;
 using SmartStudyAssistant.Core.Services.Database;
 using Xunit;
