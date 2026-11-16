@@ -1,4 +1,5 @@
-﻿using System.Windows;
+using System.IO;
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using SmartStudyAssistant.Core.Services.Ai;
 using SmartStudyAssistant.Core.Services.Database;
@@ -15,18 +16,37 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        ShutdownMode = ShutdownMode.OnMainWindowClose;
 
-        var services = new ServiceCollection();
-        ConfigureServices(services);
+        AppDomain.CurrentDomain.UnhandledException += (s, args) =>
+        {
+            MessageBox.Show($"Lỗi hệ thống: {args.ExceptionObject}", "Lỗi không xác định");
+        };
 
-        ServiceProvider = services.BuildServiceProvider();
+        try
+        {
+            var services = new ServiceCollection();
+            ConfigureServices(services);
 
-        var mainVm = ServiceProvider.GetRequiredService<MainViewModel>();
-        await mainVm.InitializeAsync();
+            ServiceProvider = services.BuildServiceProvider();
 
-        var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-        mainWindow.DataContext = mainVm;
-        mainWindow.Show();
+            // Initialize SQLite Database
+            var db = ServiceProvider.GetRequiredService<IDatabaseService>();
+            await db.InitializeAsync();
+
+            var mainVm = ServiceProvider.GetRequiredService<MainViewModel>();
+            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+            mainWindow.DataContext = mainVm;
+            MainWindow = mainWindow;
+            mainWindow.Show();
+
+            await mainVm.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.ToString(), "Lỗi khởi động Smart Study Assistant");
+            Shutdown(-1);
+        }
     }
 
     private static void ConfigureServices(IServiceCollection services)

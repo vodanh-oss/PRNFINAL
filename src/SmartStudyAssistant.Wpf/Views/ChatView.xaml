@@ -181,6 +181,36 @@
                 </ItemsControl>
             </ScrollViewer>
 
+            <!-- Friendly Empty State / Quick Start Guide -->
+            <Border Grid.Row="1" Margin="40,20" Padding="24" CornerRadius="12"
+                    Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1"
+                    Visibility="{Binding Messages.Count, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}"
+                    VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="680">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,12">
+                        <TextBlock Text="🎓" FontSize="28" Margin="0,0,10,0" />
+                        <TextBlock Text="Trợ Lý Ôn Thi &amp; Học Tập Thông Minh" Style="{StaticResource Header2TextStyle}" />
+                    </StackPanel>
+
+                    <TextBlock Text="Hệ thống hỗ trợ sinh viên học tập thông minh với AI Chat kết hợp tra cứu tài liệu bài giảng (RAG):" 
+                               Style="{StaticResource SubtextStyle}" TextAlignment="Center" Margin="0,0,0,16" />
+
+                    <Border Background="{StaticResource SurfaceAltBrush}" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="1. 📚 Kéo-thả Slide bài giảng (PDF, DOCX, TXT) vào tab 'Tài Liệu &amp; Slide'" 
+                                       Style="{StaticResource BodyTextStyle}" FontWeight="Medium" Margin="0,0,0,8" />
+                            <TextBlock Text="2. ⚡ Chọn nền tảng AI (Gemini, OpenAI, Claude, Ollama) ở menu bên trái (hoặc cấu hình API Key trong 'Cấu Hình')" 
+                                       Style="{StaticResource BodyTextStyle}" FontWeight="Medium" Margin="0,0,0,8" />
+                            <TextBlock Text="3. 🔍 Gõ câu hỏi ôn thi vào ô bên dưới - AI sẽ trả lời và trích dẫn trực tiếp [Slide X - TenFile.pdf] cho bạn!" 
+                                       Style="{StaticResource BodyTextStyle}" FontWeight="Medium" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="💡 Bạn có thể bấm vào các nút gợi ý bên dưới (Tóm tắt bài học, Giải thích khái niệm, Tạo trắc nghiệm) để thử ngay!" 
+                               Style="{StaticResource CaptionStyle}" Foreground="{StaticResource PrimaryHoverBrush}" TextAlignment="Center" />
+                </StackPanel>
+            </Border>
+
             <!-- Citation Drawer / Modal Popup -->
             <Border Grid.Row="1" Background="{StaticResource SurfaceBrush}" 
                     BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="2"

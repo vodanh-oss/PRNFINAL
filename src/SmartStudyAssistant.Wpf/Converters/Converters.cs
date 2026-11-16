@@ -39,15 +39,21 @@ public class BooleanToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is bool b)
+        bool b = false;
+        if (value is bool booleanVal)
         {
-            if (parameter is string paramStr && paramStr.Equals("Inverse", StringComparison.OrdinalIgnoreCase))
-            {
-                return b ? Visibility.Collapsed : Visibility.Visible;
-            }
-            return b ? Visibility.Visible : Visibility.Collapsed;
+            b = booleanVal;
         }
-        return Visibility.Collapsed;
+        else if (value is int intVal)
+        {
+            b = intVal > 0;
+        }
+
+        if (parameter is string paramStr && paramStr.Equals("Inverse", StringComparison.OrdinalIgnoreCase))
+        {
+            return b ? Visibility.Collapsed : Visibility.Visible;
+        }
+        return b ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();

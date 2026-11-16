@@ -51,7 +51,7 @@
                                    FontSize="52" FontWeight="Bold" 
                                    Foreground="{StaticResource TextPrimaryBrush}" 
                                    HorizontalAlignment="Center" />
-                        <ProgressBar Value="{Binding ProgressPercentage}" Maximum="100" Height="4" Width="120"
+                        <ProgressBar Value="{Binding ProgressPercentage, Mode=OneWay}" Maximum="100" Height="4" Width="120"
                                      Foreground="{StaticResource AccentSuccessBrush}" 
                                      Background="Transparent" BorderThickness="0" Margin="0,8,0,0" />
                     </StackPanel>
@@ -59,9 +59,10 @@
 
                 <!-- Control Action Buttons -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse, FallbackValue='Bắt đầu ▶'}" 
+                    <Button Content="Bắt đầu ▶" 
                             Command="{Binding StartPauseCommand}"
                             Style="{StaticResource PrimaryButtonStyle}" 
+                            Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}"
                             Padding="28,12" FontSize="15" Margin="0,0,12,0" />
 
                     <Button Content="Tạm dừng ⏸" 

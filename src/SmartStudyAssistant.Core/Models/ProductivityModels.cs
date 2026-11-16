@@ -40,6 +40,7 @@ public class SubjectItem
             if (Checklist.Count == 0) return 0;
             return (double)Checklist.Count(c => c.IsCompleted) / Checklist.Count * 100.0;
         }
+        set { }
     }
 }
 

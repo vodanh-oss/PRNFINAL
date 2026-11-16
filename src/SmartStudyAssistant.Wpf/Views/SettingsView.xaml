@@ -136,6 +136,31 @@
                                            TextWrapping="Wrap" Style="{StaticResource BodyTextStyle}" />
                             </StackPanel>
                         </Border>
+
+                        <!-- Simple Database Info Card -->
+                        <Border Background="{StaticResource SurfaceAltBrush}" 
+                                BorderBrush="{StaticResource SurfaceBorderBrush}" BorderThickness="1"
+                                CornerRadius="8" Padding="14" Margin="0,16,0,0">
+                            <StackPanel>
+                                <TextBlock Text="CƠ SỞ DỮ LIỆU ĐƠN GIẢN (SQLITE):" Style="{StaticResource CaptionStyle}" FontWeight="Bold" Margin="0,0,0,6" />
+                                <TextBlock Text="Ứng dụng lưu trữ toàn bộ lịch sử chat, slide bài giảng, flashcards và tiến độ môn học trong duy nhất 1 tệp SQLite nhỏ gọn:" 
+                                           Style="{StaticResource CaptionStyle}" Margin="0,0,0,8" />
+                                <TextBox Text="{Binding DatabasePath, Mode=OneWay}" IsReadOnly="True" 
+                                         Style="{StaticResource ModernTextBoxStyle}" 
+                                         FontFamily="{StaticResource MonospaceFontFamily}" FontSize="11" Margin="0,0,0,10" />
+
+                                <WrapPanel Orientation="Horizontal">
+                                    <Button Content="📂 Mở Thư Mục Chứa Database" 
+                                            Command="{Binding OpenDatabaseFolderCommand}" 
+                                            Style="{StaticResource SecondaryButtonStyle}" 
+                                            Padding="10,6" FontSize="11" Margin="0,0,8,0" />
+                                    <Button Content="🔄 Khởi Tạo Lại Dữ Liệu Mẫu (Reset)" 
+                                            Command="{Binding ResetSampleDataCommand}" 
+                                            Style="{StaticResource SecondaryButtonStyle}" 
+                                            Padding="10,6" FontSize="11" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </ScrollViewer>
             </Border>

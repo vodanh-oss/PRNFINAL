@@ -34,14 +34,19 @@
                 <TextBlock Text="Hỗ trợ tự động phân đoạn theo từng slide / trang và sinh vector embedding" 
                            Style="{StaticResource SubtextStyle}" HorizontalAlignment="Center" Margin="0,4,0,14" />
                 
-                <Button Content="📂 Chọn tệp từ máy..." 
-                        Command="{Binding BrowseAndAddFilesCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}" 
-                        HorizontalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="📂 Chọn tệp từ máy..." 
+                            Command="{Binding BrowseAndAddFilesCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}" 
+                            Margin="0,0,10,0" />
+                    <Button Content="✨ Nạp Bài Giảng Mẫu (Thử Nhanh)" 
+                            Command="{Binding LoadSampleDocumentCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}" />
+                </StackPanel>
 
                 <!-- Progress indicator -->
                 <StackPanel Margin="0,16,0,0" Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ProgressBar Value="{Binding ProcessingProgress}" Maximum="100" Height="8" 
+                    <ProgressBar Value="{Binding ProcessingProgress, Mode=OneWay}" Maximum="100" Height="8" 
                                  Foreground="{StaticResource PrimaryBrush}" Background="{StaticResource SurfaceAltBrush}" />
                     <TextBlock Text="{Binding ProcessingStatus}" Style="{StaticResource CaptionStyle}" 
                                HorizontalAlignment="Center" Margin="0,6,0,0" />

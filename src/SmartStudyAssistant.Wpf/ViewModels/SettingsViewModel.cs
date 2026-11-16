@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SmartStudyAssistant.Core.Models;
 using SmartStudyAssistant.Core.Services.Ai;
+using SmartStudyAssistant.Core.Services.Database;
 
 namespace SmartStudyAssistant.Wpf.ViewModels;
 
@@ -33,6 +34,7 @@ public partial class ProviderItemViewModel : ObservableObject
 public partial class SettingsViewModel : ObservableObject
 {
     private readonly AiServiceCoordinator _aiCoordinator;
+    private readonly IDatabaseService _databaseService;
 
     [ObservableProperty]
     private ObservableCollection<ProviderItemViewModel> _providers = new();
@@ -46,9 +48,14 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private string _globalStatusMessage = string.Empty;
 
-    public SettingsViewModel(AiServiceCoordinator aiCoordinator)
+    [ObservableProperty]
+    private string _databasePath = string.Empty;
+
+    public SettingsViewModel(AiServiceCoordinator aiCoordinator, IDatabaseService databaseService)
     {
         _aiCoordinator = aiCoordinator;
+        _databaseService = databaseService;
+        DatabasePath = _databaseService.DatabasePath;
         LoadProviders();
     }
 
@@ -144,5 +151,45 @@ public partial class SettingsViewModel : ObservableObject
         }
         _aiCoordinator.CurrentProviderType = item.ProviderType;
         SaveSettings();
+    }
+
+    [RelayCommand]
+    private void OpenDatabaseFolder()
+    {
+        try
+        {
+            var dir = System.IO.Path.GetDirectoryName(DatabasePath);
+            if (!string.IsNullOrEmpty(dir) && System.IO.Directory.Exists(dir))
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = dir,
+                    UseShellExecute = true
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            GlobalStatusMessage = "Không thể mở thư mục: " + ex.Message;
+        }
+    }
+
+    [RelayCommand]
+    private async Task ResetSampleDataAsync()
+    {
+        IsBusy = true;
+        try
+        {
+            await _databaseService.SeedSampleDataAsync(force: true);
+            GlobalStatusMessage = "✓ Đã khởi tạo lại dữ liệu bài giảng, flashcards và checklist môn học mẫu thành công!";
+        }
+        catch (Exception ex)
+        {
+            GlobalStatusMessage = "✗ Lỗi khi nạp dữ liệu mẫu: " + ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

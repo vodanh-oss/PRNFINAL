@@ -5,6 +5,8 @@ namespace SmartStudyAssistant.Core.Services.Database;
 public interface IDatabaseService
 {
     Task InitializeAsync();
+    string DatabasePath { get; }
+    Task SeedSampleDataAsync(bool force = false);
     
     // Sessions & Messages
     Task<List<ChatSession>> GetSessionsAsync();

@@ -101,6 +101,27 @@ public partial class DocumentsViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private async Task LoadSampleDocumentAsync()
+    {
+        IsProcessing = true;
+        ProcessingStatus = "Đang nạp đề cương & slide bài giảng mẫu...";
+        try
+        {
+            await _databaseService.SeedSampleDataAsync(force: true);
+            await LoadDocumentsAsync();
+            ProcessingStatus = "✓ Đã nạp thành công bài giảng mẫu!";
+        }
+        catch (Exception ex)
+        {
+            ProcessingStatus = "✗ Lỗi: " + ex.Message;
+        }
+        finally
+        {
+            IsProcessing = false;
+        }
+    }
+
     public async Task ProcessFilesAsync(IEnumerable<string> filePaths)
     {
         IsProcessing = true;

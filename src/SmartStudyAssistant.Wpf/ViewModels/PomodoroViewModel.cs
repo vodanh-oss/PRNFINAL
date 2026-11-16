@@ -54,6 +54,7 @@ public partial class PomodoroViewModel : ObservableObject
 
             return (double)(total - SecondsRemaining) / total * 100.0;
         }
+        set { }
     }
 
     public string ModeTitle => CurrentMode switch

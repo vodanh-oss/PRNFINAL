@@ -9,6 +9,8 @@ public class SqliteDatabaseService : IDatabaseService
     private readonly string _connectionString;
     private bool _isInitialized;
 
+    public string DatabasePath { get; }
+
     public SqliteDatabaseService(string? customDbPath = null)
     {
         string dbPath;
@@ -23,6 +25,8 @@ public class SqliteDatabaseService : IDatabaseService
             Directory.CreateDirectory(folder);
             dbPath = Path.Combine(folder, "study_assistant.db");
         }
+
+        DatabasePath = dbPath;
 
         _connectionString = new SqliteConnectionStringBuilder
         {
@@ -129,6 +133,7 @@ public class SqliteDatabaseService : IDatabaseService
         await cmd.ExecuteNonQueryAsync();
 
         _isInitialized = true;
+        await SeedSampleDataAsync(force: false);
     }
 
     private async Task EnsureInitializedAsync()
@@ -710,5 +715,195 @@ public class SqliteDatabaseService : IDatabaseService
         cmd.CommandText = "DELETE FROM StudyNotes WHERE Id = @Id;";
         cmd.Parameters.AddWithValue("@Id", id);
         await cmd.ExecuteNonQueryAsync();
+    }
+
+    public async Task SeedSampleDataAsync(bool force = false)
+    {
+        // 1. Seed Sample Document & Chunks for immediate RAG testing
+        var docs = await GetDocumentsAsync();
+        if (docs.Count == 0 || force)
+        {
+            var sampleDocId = "sample-prn-guide";
+            var sampleDoc = new DocumentItem
+            {
+                Id = sampleDocId,
+                FileName = "DeCuong_KienTruc_DotNet_Va_AI.txt",
+                FilePath = Path.Combine(Path.GetDirectoryName(DatabasePath) ?? "", "DeCuong_KienTruc_DotNet_Va_AI.txt"),
+                FileType = "TXT",
+                TotalPages = 4,
+                TotalChunks = 4,
+                FileSizeBytes = 2048,
+                UploadedAt = DateTime.UtcNow,
+                IsSelectedForRag = true
+            };
+            await SaveDocumentAsync(sampleDoc);
+
+            var chunks = new List<DocumentChunk>
+            {
+                new()
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    DocumentId = sampleDocId,
+                    DocumentName = sampleDoc.FileName,
+                    ChunkIndex = 1,
+                    PageOrSlideNumber = 1,
+                    TextContent = "Tổng quan Lập trình Ứng dụng .NET 8 & WPF: Khóa học trang bị cho sinh viên kỹ năng xây dựng ứng dụng máy tính hiện đại. Kiến trúc phân lớp chuẩn bao gồm: Presentation Layer (WPF MVVM), Business Logic Layer (Core Services), và Data Access Layer (SQLite). Các nguyên lý SOLID và Inversion of Control (IoC) thông qua Microsoft.Extensions.DependencyInjection.",
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    DocumentId = sampleDocId,
+                    DocumentName = sampleDoc.FileName,
+                    ChunkIndex = 2,
+                    PageOrSlideNumber = 2,
+                    TextContent = "Mô hình MVVM (Model-View-ViewModel) trong C#: Phân tách triệt để giữa giao diện XAML và logic điều khiển. ViewModel kế thừa ObservableObject, triển khai INotifyPropertyChanged để tự động cập nhật dữ liệu khi thuộc tính thay đổi. ICommand và RelayCommand liên kết trực tiếp các sự kiện người dùng (Click, KeyPress) mà không cần viết code-behind rườm rà.",
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    DocumentId = sampleDocId,
+                    DocumentName = sampleDoc.FileName,
+                    ChunkIndex = 3,
+                    PageOrSlideNumber = 3,
+                    TextContent = "Kiến trúc RAG (Retrieval-Augmented Generation) & Tìm kiếm ngữ nghĩa: RAG trích xuất các đoạn văn bản (chunks) từ slide bài giảng và tính toán độ tương đồng cosine similarity giữa câu hỏi và tài liệu. Mô hình AI nhận ngữ cảnh bài giảng và sinh câu trả lời chính xác, đính kèm số slide trích dẫn [Slide X - TênFile].",
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    DocumentId = sampleDocId,
+                    DocumentName = sampleDoc.FileName,
+                    ChunkIndex = 4,
+                    PageOrSlideNumber = 4,
+                    TextContent = "Bảo mật thông tin & Tối ưu hóa học tập: API Key của các dịch vụ đám mây (Gemini, OpenAI, Claude) bắt buộc phải mã hóa qua Windows DPAPI (ProtectedData), lưu trong tệp nhị phân cục bộ. Phương pháp học tập Spaced Repetition (lặp lại ngắt quãng) kết hợp với kỹ thuật đếm giờ Pomodoro 25 phút giúp tăng 60% hiệu quả ghi nhớ trước kỳ thi.",
+                    CreatedAt = DateTime.UtcNow
+                }
+            };
+            await SaveChunksAsync(chunks);
+        }
+
+        // 2. Seed Sample Subjects & Checklists
+        var subjects = await GetSubjectsAsync();
+        if (subjects.Count == 0 || force)
+        {
+            var sub1 = new SubjectItem
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Name = "Lập trình C# & WPF Nâng Cao",
+                Code = "PRN211",
+                TargetGrade = "A+",
+                ExamDate = DateTime.Now.AddDays(30),
+                Checklist = new List<ChecklistItem>
+                {
+                    new() { Id = "1", Title = "Nắm vững Dependency Injection & ServiceCollection", IsCompleted = true },
+                    new() { Id = "2", Title = "Thành thạo XAML Data Binding & IValueConverter", IsCompleted = true },
+                    new() { Id = "3", Title = "Tích hợp SQLite & CRUD Operations", IsCompleted = true },
+                    new() { Id = "4", Title = "Xử lý Async/Await và đa luồng Dispatcher", IsCompleted = false },
+                    new() { Id = "5", Title = "Luyện đề thi thực hành cuối kỳ", IsCompleted = false }
+                }
+            };
+            await SaveSubjectAsync(sub1);
+
+            var sub2 = new SubjectItem
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Name = "Trí Tuệ Nhân Tạo & RAG",
+                Code = "AI301",
+                TargetGrade = "9.5",
+                ExamDate = DateTime.Now.AddDays(45),
+                Checklist = new List<ChecklistItem>
+                {
+                    new() { Id = "1", Title = "Hiểu cơ chế Embedding và Cosine Similarity", IsCompleted = true },
+                    new() { Id = "2", Title = "Kỹ thuật Prompt Engineering và Citations", IsCompleted = true },
+                    new() { Id = "3", Title = "Bảo mật khóa API với Windows DPAPI", IsCompleted = true },
+                    new() { Id = "4", Title = "Tối ưu hóa chunking văn bản PDF/DOCX", IsCompleted = false }
+                }
+            };
+            await SaveSubjectAsync(sub2);
+        }
+
+        // 3. Seed Sample Flashcards
+        var flashcards = await GetFlashcardsAsync();
+        if (flashcards.Count == 0 || force)
+        {
+            var cards = new List<Flashcard>
+            {
+                new()
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    SubjectName = "PRN211",
+                    Front = "Mô hình MVVM là gì và gồm những thành phần nào?",
+                    Back = "Model: Dữ liệu & nghiệp vụ; View: Giao diện XAML; ViewModel: Cầu nối xử lý Data Binding và Commands. Giúp tách biệt hoàn toàn UI và Logic.",
+                    ReviewCount = 2,
+                    EaseLevel = 3,
+                    NextReviewDate = DateTime.Today.AddDays(3),
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    SubjectName = "AI301",
+                    Front = "RAG (Retrieval-Augmented Generation) giải quyết vấn đề gì của LLM?",
+                    Back = "RAG giảm thiểu ảo giác (hallucination) bằng cách truy xuất dữ liệu từ tài liệu thực tế của người dùng, cung cấp câu trả lời có trích dẫn nguồn cụ thể.",
+                    ReviewCount = 1,
+                    EaseLevel = 3,
+                    NextReviewDate = DateTime.Today.AddDays(2),
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    SubjectName = "AI301",
+                    Front = "Công thức Cosine Similarity tính như thế nào?",
+                    Back = "cos(θ) = (A · B) / (||A|| × ||B||). Đo góc giữa 2 vector từ -1 đến 1. Điểm số càng gần 1 chứng tỏ hai đoạn văn bản càng tương đồng ngữ nghĩa.",
+                    ReviewCount = 0,
+                    EaseLevel = 2,
+                    NextReviewDate = DateTime.Today.AddDays(1),
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    SubjectName = "Chung",
+                    Front = "Kỹ thuật Pomodoro chuẩn bao gồm các bước nào?",
+                    Back = "25 phút tập trung cao độ (Work) -> 5 phút nghỉ ngắn (Short Break). Sau 4 chu kỳ lặp lại thì nghỉ dài 15 - 30 phút.",
+                    ReviewCount = 3,
+                    EaseLevel = 5,
+                    NextReviewDate = DateTime.Today.AddDays(7),
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    SubjectName = "PRN211",
+                    Front = "Windows DPAPI (Data Protection API) hoạt động ra sao?",
+                    Back = "Sử dụng khóa bí mật gắn liền với tài khoản đăng nhập Windows để mã hóa dữ liệu. Không ai khác ngoài người dùng đó mở được tệp cấu hình.",
+                    ReviewCount = 1,
+                    EaseLevel = 4,
+                    NextReviewDate = DateTime.Today.AddDays(4),
+                    CreatedAt = DateTime.UtcNow
+                }
+            };
+            foreach (var c in cards) await SaveFlashcardAsync(c);
+        }
+
+        // 4. Seed Sample Study Note
+        var notes = await GetNotesAsync();
+        if (notes.Count == 0 || force)
+        {
+            var note = new StudyNote
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                SubjectName = "PRN211",
+                Title = "Ghi chú ôn thi kiến trúc WPF & RAG",
+                Content = "Cần lưu ý:\n1. Khi cập nhật UI từ luồng nền (Background Task), bắt buộc dùng Dispatcher.\n2. Chunker văn bản cần giữ nguyên số trang/slide để trích dẫn chính xác.\n3. Mã hóa API Key bằng Windows DPAPI trước khi lưu xuống đĩa.",
+                Tags = "WPF, RAG, Architecture",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            await SaveNoteAsync(note);
+        }
     }
 }

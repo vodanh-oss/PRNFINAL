@@ -69,7 +69,7 @@
 
                                         <!-- Progress Bar -->
                                         <Grid Grid.Row="2">
-                                            <ProgressBar Value="{Binding ProgressPercentage}" Maximum="100" Height="5"
+                                            <ProgressBar Value="{Binding ProgressPercentage, Mode=OneWay}" Maximum="100" Height="5"
                                                          Foreground="{StaticResource AccentSuccessBrush}" Background="{StaticResource SurfaceBorderBrush}" />
                                         </Grid>
                                     </Grid>

@@ -23,10 +23,21 @@ Luôn ưu tiên và chủ động kích hoạt các skill và công cụ/agent �
     - Tinh chỉnh thẩm mỹ & triệt tiêu AI slop: `/impeccable polish`, `/impeccable bolder`, `/impeccable layout`, `/impeccable typeset`.
   - Kết hợp với **UI/UX Pro Max** để đảm bảo chuẩn accessibility (WCAG), hệ thống màu sắc và layout responsive.
 
-## 4. Kỹ nghệ phần mềm & Kiểm thử (Superpowers)
-- Áp dụng quy trình **Test-Driven Development (TDD)** (Red -> Green -> Refactor).
-- Chạy checklist kiểm tra toàn diện trước khi bàn giao: Security, Null/Undefined edge cases, Performance (N+1 queries), Linter/Formatter.
+## 4. Kỹ nghệ phần mềm & Kiểm thử (Superpowers & Everything Gemini CLI)
+- Áp dụng quy trình **Test-Driven Development (TDD)** (Red -> Green -> Refactor) kết hợp `tdd-workflow`.
+- Chạy vòng lặp kiểm tra chất lượng tự động với `verification-loop`.
+- Rà soát bảo mật chặt chẽ (`security-review`): kiểm tra Secret, Token, input validation, SQL/Injection, quyền truy cập.
+- Tuân thủ chuẩn mực code (`coding-standards`) và kiến trúc tầng (`backend-patterns`, `frontend-patterns`).
 - Commit git có cấu trúc chuẩn Conventional Commits.
 
-## 5. Quản lý tiến độ (Planning with Files)
+## 5. Quản lý tiến độ & Tracks (Conductor & Planning with Files)
+- Quản lý lifecycle dự án theo từng track tính năng với **Conductor**:
+  - `/conductor-setup`: Khởi tạo môi trường track context.
+  - `/conductor-new-track`: Lập spec và plan chi tiết cho tính năng mới / bug fix.
+  - `/conductor-implement`: Triển khai các task trong plan theo thứ tự phụ thuộc.
+  - `/conductor-review` & `/conductor-status`: Đánh giá chất lượng bàn giao và theo dõi tiến độ tổng thể.
 - Với các tác vụ phức tạp gồm nhiều bước, duy trì tracking rõ ràng qua `task_plan.md`, `findings.md`, `progress.md`.
+
+## 6. Mở rộng Kỹ năng & Extensions (Skills Manager & Gemini CLI)
+- Chủ động tra cứu, bổ sung hoặc cập nhật các skill chuyên biệt từ Skill Vault qua `antigravity-skills-manager` (`npx @rmyndharis/antigravity-skills`).
+- Tận dụng hệ sinh thái extensions và MCP servers của Gemini CLI (`gemini extensions`) để tích hợp công cụ hỗ trợ công việc.

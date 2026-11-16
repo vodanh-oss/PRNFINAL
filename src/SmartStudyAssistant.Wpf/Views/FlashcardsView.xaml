@@ -97,6 +97,15 @@
                             Command="{Binding PreviousCardCommand}"
                             Style="{StaticResource SecondaryButtonStyle}" />
 
+                    <!-- Flip Button (Show when NOT flipped) -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center"
+                                Visibility="{Binding IsFlipped, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}">
+                        <Button Content="🔄 Lật Thẻ Xem Đáp Án" 
+                                Command="{Binding FlipCardCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}" 
+                                Padding="16,8" />
+                    </StackPanel>
+
                     <!-- SRS Rating Buttons (Show when flipped) -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center"
                                 Visibility="{Binding IsFlipped, Converter={StaticResource BooleanToVisibilityConverter}}">

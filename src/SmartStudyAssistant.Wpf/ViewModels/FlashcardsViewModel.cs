@@ -74,9 +74,19 @@ public partial class FlashcardsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task RateCardAsync(int easeScore) // 1: Hard, 3: Good, 5: Easy
+    private async Task RateCardAsync(object? parameter) // 1: Hard, 3: Good, 5: Easy
     {
         if (CurrentCard == null) return;
+
+        int easeScore = 3;
+        if (parameter is int i)
+        {
+            easeScore = i;
+        }
+        else if (parameter is string s && int.TryParse(s, out var parsed))
+        {
+            easeScore = parsed;
+        }
 
         CurrentCard.ReviewCount++;
         CurrentCard.EaseLevel = easeScore;
