@@ -52,8 +52,11 @@ public partial class App : Application
     private static void ConfigureServices(IServiceCollection services)
     {
         // Core Services
-        services.AddSingleton<ISecureStorage, DpapiSecureStorage>();
-        services.AddSingleton<IDatabaseService, SqlServerDatabaseService>();
+        var secureStorage = new DpapiSecureStorage();
+        services.AddSingleton<ISecureStorage>(secureStorage);
+
+        string connectionString = LoadConnectionString(secureStorage);
+        services.AddSingleton<IDatabaseService>(new SqlServerDatabaseService(connectionString));
         services.AddSingleton<IRagEngine, VectorRagEngine>();
         services.AddSingleton<AiServiceCoordinator>();
 
@@ -66,5 +69,42 @@ public partial class App : Application
 
         // Views
         services.AddSingleton<MainWindow>();
+    }
+
+    private static string LoadConnectionString(ISecureStorage secureStorage)
+    {
+        // 1. Kiểm tra chuỗi kết nối người dùng đã lưu tùy chỉnh qua giao diện Cấu hình
+        var savedCustom = secureStorage.GetSecret("SqlConnectionString");
+        if (!string.IsNullOrWhiteSpace(savedCustom))
+        {
+            return savedCustom.Trim();
+        }
+
+        // 2. Đọc từ tệp cấu hình appsettings.json nếu có
+        try
+        {
+            var configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json");
+            if (File.Exists(configPath))
+            {
+                var json = File.ReadAllText(configPath);
+                using var doc = System.Text.Json.JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("ConnectionStrings", out var cs) &&
+                    cs.TryGetProperty("DefaultConnection", out var val))
+                {
+                    var fileConn = val.GetString();
+                    if (!string.IsNullOrWhiteSpace(fileConn))
+                    {
+                        return fileConn.Trim();
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Dự phòng nếu đọc tệp lỗi
+        }
+
+        // 3. Dự phòng mặc định localhost
+        return SqlServerDatabaseService.DefaultConnectionString;
     }
 }

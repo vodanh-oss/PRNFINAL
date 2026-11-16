@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using SmartStudyAssistant.Core.Models;
 using SmartStudyAssistant.Core.Services.Ai;
 using SmartStudyAssistant.Core.Services.Database;
+using SmartStudyAssistant.Core.Services.Security;
 
 namespace SmartStudyAssistant.Wpf.ViewModels;
 
@@ -35,6 +36,7 @@ public partial class SettingsViewModel : ObservableObject
 {
     private readonly AiServiceCoordinator _aiCoordinator;
     private readonly IDatabaseService _databaseService;
+    private readonly ISecureStorage _secureStorage;
 
     [ObservableProperty]
     private ObservableCollection<ProviderItemViewModel> _providers = new();
@@ -57,10 +59,11 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private bool? _isSqlConnected;
 
-    public SettingsViewModel(AiServiceCoordinator aiCoordinator, IDatabaseService databaseService)
+    public SettingsViewModel(AiServiceCoordinator aiCoordinator, IDatabaseService databaseService, ISecureStorage secureStorage)
     {
         _aiCoordinator = aiCoordinator;
         _databaseService = databaseService;
+        _secureStorage = secureStorage;
         SqlConnectionString = _databaseService.ConnectionString;
 
         LoadProviders();
@@ -145,7 +148,13 @@ public partial class SettingsViewModel : ObservableObject
             _aiCoordinator.UpdateProviderConfig(config);
         }
 
-        GlobalStatusMessage = "✓ Đã lưu cấu hình AI thành công (Bảo mật qua Windows DPAPI)!";
+        if (!string.IsNullOrWhiteSpace(SqlConnectionString))
+        {
+            _databaseService.ConnectionString = SqlConnectionString.Trim();
+            _secureStorage.SaveSecret("SqlConnectionString", SqlConnectionString.Trim());
+        }
+
+        GlobalStatusMessage = "✓ Đã lưu cấu hình AI & Chuỗi kết nối SQL Server thành công (Bảo mật qua DPAPI)!";
     }
 
     [RelayCommand]
@@ -171,9 +180,15 @@ public partial class SettingsViewModel : ObservableObject
             _databaseService.ConnectionString = SqlConnectionString.Trim();
             bool connected = await _databaseService.TestConnectionAsync();
             IsSqlConnected = connected;
-            SqlConnectionStatus = connected 
-                ? "✓ Kết nối thành công tới SQL Server (SSMS)! Database: SmartStudyDb" 
-                : "✗ Không thể kết nối tới SQL Server với chuỗi kết nối trên.";
+            if (connected)
+            {
+                _secureStorage.SaveSecret("SqlConnectionString", SqlConnectionString.Trim());
+                SqlConnectionStatus = "✓ Kết nối thành công tới SQL Server (SSMS)! Database: SmartStudyDb";
+            }
+            else
+            {
+                SqlConnectionStatus = "✗ Không thể kết nối tới SQL Server với chuỗi kết nối trên.";
+            }
             GlobalStatusMessage = SqlConnectionStatus;
         }
         catch (Exception ex)

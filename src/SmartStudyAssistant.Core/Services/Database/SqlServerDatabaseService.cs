@@ -152,7 +152,7 @@ public class SqlServerDatabaseService : IDatabaseService
         {
             Id = sampleDocId,
             FileName = "DeCuong_KienTruc_DotNet_Va_AI.txt",
-            FilePath = "C:\\SmartStudy\\DeCuong_KienTruc_DotNet_Va_AI.txt",
+            FilePath = "Samples/DeCuong_KienTruc_DotNet_Va_AI.txt",
             FileType = "TXT",
             TotalPages = 4,
             TotalChunks = 4,

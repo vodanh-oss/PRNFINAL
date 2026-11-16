@@ -111,7 +111,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM Documents WHERE Id = 'sample-prn-guide')
 BEGIN
     INSERT INTO Documents (Id, FileName, FilePath, FileType, TotalPages, TotalChunks, UploadedAt, IsSelectedForRag)
-    VALUES ('sample-prn-guide', N'DeCuong_KienTruc_DotNet_Va_AI.txt', N'C:\SmartStudy\DeCuong_KienTruc_DotNet_Va_AI.txt', 'TXT', 4, 4, SYSUTCDATETIME(), 1);
+    VALUES ('sample-prn-guide', N'DeCuong_KienTruc_DotNet_Va_AI.txt', N'Samples/DeCuong_KienTruc_DotNet_Va_AI.txt', 'TXT', 4, 4, SYSUTCDATETIME(), 1);
 
     INSERT INTO DocumentChunks (Id, DocumentId, DocumentName, ChunkIndex, PageOrSlideNumber, TextContent)
     VALUES 
