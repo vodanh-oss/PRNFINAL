@@ -13,6 +13,27 @@
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundBrush}">
 
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:ChatViewModel}">
+            <views:ChatView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocumentsViewModel}">
+            <views:DocumentsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:FlashcardsViewModel}">
+            <views:FlashcardsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PomodoroViewModel}">
+            <views:PomodoroView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ProgressViewModel}">
+            <views:ProgressView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240" />
@@ -44,37 +65,37 @@
                 <StackPanel Grid.Row="1" Margin="12,10,12,10">
                     <!-- Chat & RAG -->
                     <Button Content="💬  AI Chat &amp; RAG" 
-                            Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavigationTab.Chat}"
+                            Command="{Binding NavigateCommand}" CommandParameter="Chat"
                             Style="{StaticResource SecondaryButtonStyle}" 
                             HorizontalContentAlignment="Left" Padding="14,10" Margin="0,0,0,6" />
 
                     <!-- Documents & Slides -->
                     <Button Content="📚  Tài Liệu &amp; Slide" 
-                            Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavigationTab.Documents}"
+                            Command="{Binding NavigateCommand}" CommandParameter="Documents"
                             Style="{StaticResource SecondaryButtonStyle}" 
                             HorizontalContentAlignment="Left" Padding="14,10" Margin="0,0,0,6" />
 
                     <!-- Flashcards -->
                     <Button Content="📇  Thẻ Flashcards" 
-                            Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavigationTab.Flashcards}"
+                            Command="{Binding NavigateCommand}" CommandParameter="Flashcards"
                             Style="{StaticResource SecondaryButtonStyle}" 
                             HorizontalContentAlignment="Left" Padding="14,10" Margin="0,0,0,6" />
 
                     <!-- Pomodoro -->
                     <Button Content="⏱️  Đồng Hồ Pomodoro" 
-                            Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavigationTab.Pomodoro}"
+                            Command="{Binding NavigateCommand}" CommandParameter="Pomodoro"
                             Style="{StaticResource SecondaryButtonStyle}" 
                             HorizontalContentAlignment="Left" Padding="14,10" Margin="0,0,0,6" />
 
                     <!-- Progress & Checklist -->
                     <Button Content="📊  Tiến Độ Môn Học" 
-                            Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavigationTab.Progress}"
+                            Command="{Binding NavigateCommand}" CommandParameter="Progress"
                             Style="{StaticResource SecondaryButtonStyle}" 
                             HorizontalContentAlignment="Left" Padding="14,10" Margin="0,0,0,6" />
 
                     <!-- Settings -->
                     <Button Content="⚙️  Cấu Hình Nền Tảng" 
-                            Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavigationTab.Settings}"
+                            Command="{Binding NavigateCommand}" CommandParameter="Settings"
                             Style="{StaticResource SecondaryButtonStyle}" 
                             HorizontalContentAlignment="Left" Padding="14,10" Margin="0,0,0,6" />
                 </StackPanel>
@@ -120,31 +141,7 @@
             </Grid>
         </Border>
 
-        <!-- Right Content Area -->
-        <Grid Grid.Column="1">
-            <!-- Chat View -->
-            <views:ChatView DataContext="{Binding ChatVm}" 
-                            Visibility="{Binding SelectedTab, Converter={StaticResource TabToVisibilityConverter}, ConverterParameter=Chat}" />
-
-            <!-- Documents View -->
-            <views:DocumentsView DataContext="{Binding DocumentsVm}" 
-                                 Visibility="{Binding SelectedTab, Converter={StaticResource TabToVisibilityConverter}, ConverterParameter=Documents}" />
-
-            <!-- Flashcards View -->
-            <views:FlashcardsView DataContext="{Binding FlashcardsVm}" 
-                                  Visibility="{Binding SelectedTab, Converter={StaticResource TabToVisibilityConverter}, ConverterParameter=Flashcards}" />
-
-            <!-- Pomodoro View -->
-            <views:PomodoroView DataContext="{Binding PomodoroVm}" 
-                                Visibility="{Binding SelectedTab, Converter={StaticResource TabToVisibilityConverter}, ConverterParameter=Pomodoro}" />
-
-            <!-- Progress View -->
-            <views:ProgressView DataContext="{Binding ProgressVm}" 
-                                Visibility="{Binding SelectedTab, Converter={StaticResource TabToVisibilityConverter}, ConverterParameter=Progress}" />
-
-            <!-- Settings View -->
-            <views:SettingsView DataContext="{Binding SettingsVm}" 
-                                Visibility="{Binding SelectedTab, Converter={StaticResource TabToVisibilityConverter}, ConverterParameter=Settings}" />
-        </Grid>
+        <!-- Right Content Area: Swappable Dynamic View (Guaranteed 1 active view, never stacks) -->
+        <ContentControl Grid.Column="1" Content="{Binding CurrentView}" />
     </Grid>
 </Window>

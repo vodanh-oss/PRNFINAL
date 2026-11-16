@@ -32,6 +32,12 @@ public partial class MainViewModel : ObservableObject
     private NavigationTab _selectedTab = NavigationTab.Chat;
 
     [ObservableProperty]
+    private object _currentView = null!;
+
+    [ObservableProperty]
+    private string _activeTab = "Chat";
+
+    [ObservableProperty]
     private AiProviderType _activeProviderType;
 
     [ObservableProperty]
@@ -60,6 +66,9 @@ public partial class MainViewModel : ObservableObject
         ProgressVm = progressVm;
         SettingsVm = settingsVm;
 
+        CurrentView = ChatVm;
+        ActiveTab = "Chat";
+
         ActiveProviderType = _aiCoordinator.CurrentProviderType;
 
         _aiCoordinator.ProviderChanged += (type) =>
@@ -79,9 +88,29 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Navigate(NavigationTab tab)
+    private void Navigate(string tab)
     {
-        SelectedTab = tab;
+        ActiveTab = tab;
+        CurrentView = tab switch
+        {
+            "Chat" => ChatVm,
+            "Documents" => DocumentsVm,
+            "Flashcards" => FlashcardsVm,
+            "Pomodoro" => PomodoroVm,
+            "Progress" => ProgressVm,
+            "Settings" => SettingsVm,
+            _ => ChatVm
+        };
+
+        if (Enum.TryParse<NavigationTab>(tab, out var parsedTab))
+        {
+            SelectedTab = parsedTab;
+        }
+    }
+
+    public void NavigateToTab(NavigationTab tab)
+    {
+        Navigate(tab.ToString());
     }
 
     [RelayCommand]
